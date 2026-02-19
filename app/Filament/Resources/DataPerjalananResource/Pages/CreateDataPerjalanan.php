@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Filament\Resources\DataPerjalananResource\Pages;
+
+use App\Filament\Resources\DataPerjalananResource;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Log;
+
+class CreateDataPerjalanan extends CreateRecord
+{
+    protected static string $resource = DataPerjalananResource::class;
+
+    protected ?string $heading = 'Halaman Menambah Data Perjalanan';
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function getCreateFormAction(): Action
+    {
+        return parent::getCreateFormAction()
+            ->label('Simpan');
+    }
+
+    protected function getCreateAnotherFormAction(): Action
+    {
+        return parent::getCreateAnotherFormAction()
+            ->label('Simpan & Tambah Lagi');
+    }
+
+    protected function getCancelFormAction(): Action
+    {
+        return parent::getCancelFormAction()
+            ->label('Batal');
+    }
+}
