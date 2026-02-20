@@ -105,10 +105,14 @@ class DataDiriResource extends Resource
                         Select::make('unit_kerja')
                             ->label('Unit Kerja')
                             ->options([
-                                'sdm' => 'SDM',
+                                'sekretariat / tata usaha' => 'Sekretariat/Tata Usaha',
+                                'program' => 'Program',
+                                'berita' => 'Berita',
+                                'teknik' => 'Teknik',
+                                'pengembangan usaha' => 'Pengembangan Usaha',
+                                'konten Media Baru' => 'Konten Media Baru',
                                 'keuangan' => 'Keuangan',
-                                'administratif' => 'Administratif',
-                                'staff' => 'Staff'
+                                'umum' => 'Umum',
                             ])
                             ->default('staff')
                             ->required(),
@@ -133,6 +137,7 @@ class DataDiriResource extends Resource
                     ->searchable(),
                 TextColumn::make('unit_kerja')
                     ->label('Unit Kerja')
+                    ->formatStateUsing(fn (?string $state): ?string => $state ? ucwords($state) : '-')
                     ->searchable(),
                 TextColumn::make('pangkat')
                     ->label('Pangkat/Gol')

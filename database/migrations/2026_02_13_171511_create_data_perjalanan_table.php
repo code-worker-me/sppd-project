@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sppd_id')->unique()->constrained('data_sppd')->onDelete('cascade');
             $table->enum('tipe_perjalanan', ['darat', 'laut', 'udara'])->nullable();
-            $table->string('tiket')->nullable();
-            $table->string('hotel')->nullable();
+            $table->string('tiket', 255)->nullable();
+            $table->string('hotel', 255)->nullable();
             $table->integer('uang_saku')->default(0);
             $table->integer('transport')->default(0);
             $table->timestamps();

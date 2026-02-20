@@ -35,14 +35,11 @@ class DataPerjalanan extends Model
         return $this->uang_saku + $this->transport;
     }
 
-    public function getTiketUrlAttribute(): ?string
+    public static function getTotalSemuaBiaya(): int
     {
-        return $this->tiket ? Storage::disk('public')->url($this->tiket) : null;
-    }
-
-    public function getHotelUrlAttribute(): ?string
-    {
-        return $this->hotel ? Storage::disk('public')->url($this->hotel) : null;
+        return self::all()->sum(function ($perjalanan) {
+            return $perjalanan->total_biaya;
+        });
     }
 
     protected static function booted()

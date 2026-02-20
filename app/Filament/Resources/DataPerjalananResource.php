@@ -65,36 +65,14 @@ class DataPerjalananResource extends Resource
 
                         FileUpload::make('tiket')
                             ->label('Bukti Tiket')
+                            ->directory("tiket")
                             ->image()
-                            ->disk('public')
-                            ->directory('tiket')
-                            ->visibility('public')
-                            ->maxSize(5120)
-                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg', 'image/webp'])
-                            ->downloadable()
-                            ->openable()
-                            ->previewable(true) // PENTING: Bisa preview
-                            ->imagePreviewHeight('250')
-                            ->panelLayout('integrated')
-                            ->deletable(true) // PENTING: Bisa delete gambar lama
-                            ->reorderable(false)
                             ->columnSpanFull(),
 
                         FileUpload::make('hotel')
                             ->label('Bukti Hotel')
+                            ->directory("hotel")
                             ->image()
-                            ->disk('public')
-                            ->directory('hotel')
-                            ->visibility('public')
-                            ->maxSize(5120)
-                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg', 'image/webp'])
-                            ->downloadable()
-                            ->openable()
-                            ->previewable(true)
-                            ->imagePreviewHeight('250')
-                            ->panelLayout('integrated')
-                            ->deletable(true)
-                            ->reorderable(false)
                             ->columnSpanFull(),
 
                         TextInput::make('uang_saku')
@@ -264,9 +242,6 @@ class DataPerjalananResource extends Resource
                                 InfolistSection::make('Bukti Tiket')
                                     ->schema([
                                         ImageEntry::make('tiket')
-                                            ->hiddenLabel()
-                                            ->defaultImageUrl(url('/images/no-image.png'))
-                                            ->size(400)
                                             ->extraImgAttributes([
                                                 'alt' => 'Bukti Tiket',
                                                 'loading' => 'lazy',
@@ -278,9 +253,6 @@ class DataPerjalananResource extends Resource
                                 InfolistSection::make('Bukti Hotel')
                                     ->schema([
                                         ImageEntry::make('hotel')
-                                            ->hiddenLabel()
-                                            ->defaultImageUrl(url('/images/no-image.png'))
-                                            ->size(400)
                                             ->extraImgAttributes([
                                                 'alt' => 'Bukti Hotel',
                                                 'loading' => 'lazy',
