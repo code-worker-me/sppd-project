@@ -15,58 +15,54 @@ SPPD adalah aplikasi web berbasis Laravel untuk manajemen Surat Perintah Perjala
 
 **Persyaratan Sistem**
 
-- PHP 8.0+ (sesuaikan dengan `composer.json` jika diperlukan)
+- PHP 8.2+ (sesuaikan dengan `composer.json` jika diperlukan)
 - Composer
 - Node.js & npm
 - MySQL / MariaDB atau database lain yang didukung Laravel
-- Laragon (opsional, direkomendasikan untuk pengembangan di Windows)
 
 **Installasi (lokal)**
 
 1. Clone repositori:
-
-	git clone <repo-url>
+    ```bash
+	git clone https://github.com/code-worker-me/sppd-project.git
 	cd sppd
-
+    ```
 2. Pasang dependensi PHP:
-
+    ```bash
 	composer install
-
+    ```
 3. Salin file environment dan atur konfigurasi database:
-
+    ```bash
 	copy .env.example .env
 	(Edit `.env` — atur `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`)
-
+    ```
 4. Buat key aplikasi dan jalankan migrasi:
-
+    ```bash
 	php artisan key:generate
 	php artisan migrate --seed
-
+    ```
 5. Pasang dependensi frontend dan bangun aset:
-
+    ```bash
 	npm install
 	npm run dev   # untuk pengembangan
 	npm run build # untuk produksi
-
+    ```
 6. (Opsional) Buat symbolic link storage:
-
+    ```bash
 	php artisan storage:link
-
+    ```
 7. Jalankan server lokal (contoh Laragon / artisan):
-
+    ```bash
 	php artisan serve --port=8000
-
+    ```
 Catatan: Untuk lingkungan Windows + Laragon, Anda juga bisa menjalankan melalui GUI Laragon atau menaruh project di folder www.
 
 **Work In Progress (Perkembangan)**
 
-- Menambahkan pengelolaan hak akses (roles & permissions).
 - Penulisan unit & feature test untuk alur SPPD.
 - Fitur export/import (CSV/Excel) untuk data SPPD.
 - Penyempurnaan antarmuka dan validasi formulir.
 - CI/CD pipeline untuk build dan pengujian otomatis.
-
-Jika Anda ingin saya menambahkan bagian lain (contoh: panduan penggunaan Filament, contoh API, atau screenshot), beri tahu dan saya akan melengkapinya.
 
 ---
 
