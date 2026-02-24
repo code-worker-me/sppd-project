@@ -9,6 +9,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\DeleteAction;
@@ -17,6 +18,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
+use Filament\Infolists\Components\Section as InfolistSection;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Tables\Actions\ViewAction;
 
 class DataDiriResource extends Resource
 {
@@ -24,7 +28,7 @@ class DataDiriResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-identification';
 
-    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationGroup = 'Pengaturan Pegawai';
 
     protected static ?string $navigationLabel = 'Data Pegawai';
 
@@ -82,7 +86,8 @@ class DataDiriResource extends Resource
                                     ->label('Hak Akses')
                                     ->options([
                                         'user' => 'User',
-                                        'staff' => 'Staff',
+                                        'staff_sdm' => 'Staff SDM',
+                                        'staff_keuangan' => 'Staff Keuangan',
                                         'admin' => 'Admin',
                                     ])
                                     ->default('user')
@@ -147,7 +152,7 @@ class DataDiriResource extends Resource
                 //
             ])
             ->actions([
-                EditAction::make(),
+                ViewAction::make(),
                 DeleteAction::make()
                     ->label('Hapus')
                     ->modalHeading('Hapus Data Pegawai')
@@ -159,6 +164,31 @@ class DataDiriResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                InfolistSection::make('Informasi Data Pegawai')
+                    ->schema([
+                        TextEntry::make('nip')
+                            ->label("NIP")
+                            ->weight("bold"),
+
+                        TextEntry::make("user.name")
+                            ->label("Nama Pegawai")
+                            ->icon('heroicon-o-user'),
+
+                        TextEntry::make('unit_kerja')
+                            ->label("Unit Kerja")
+                            ->icon('heroicon-s-briefcase')
+                            ->formatStateUsing(fn (?string $state): ?string => $state ? ucwords($state) : '-'),
+
+                        TextEntry::make('pangkat')
+                            ->label('Pangkat/Gol'),
+                    ])->columns(2)
             ]);
     }
 

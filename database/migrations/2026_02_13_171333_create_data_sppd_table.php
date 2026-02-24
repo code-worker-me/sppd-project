@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('st')->nullable();
             $table->string('kota')->nullable();
             $table->text('deskripsi')->nullable();
+            $table->text('angkutan')->nullable();
             $table->date('tg_berangkat')->nullable();
             $table->date('tg_pulang')->nullable();
             $table->timestamps();

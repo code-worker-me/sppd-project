@@ -4,13 +4,15 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DataPerjalananResource\Pages;
 use App\Models\DataPerjalanan;
-use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid as ComponentsGrid;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section as InfolistSection;
@@ -45,63 +47,142 @@ class DataPerjalananResource extends Resource
                 Section::make('Informasi Perjalanan')
                     ->schema([
                         Select::make('sppd_id')
-                            ->label('Pilih Surat Tugas')
-                            ->relationship('sppd', 'st')
-                            ->searchable()
+                            ->label('Pilih Nomor ST')
+                            ->relationship(
+                                name: 'sppd',
+                                titleAttribute: 'st',
+                                modifyQueryUsing: fn ($query) => $query
+                                    ->doesntHave('perjalanan') // Hanya SPPD yang belum punya perjalanan
+                                    ->with('user')
+                                    ->orderBy('created_at', 'desc')
+                            )
+                            ->searchable(['st', 'kota'])
                             ->preload()
                             ->required()
                             ->native(false)
-                            ->live(),
+                            ->placeholder('Pilih nomor surat tugas')
+                            ->live()
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->st.' - '.$record->user->full_name.' ('.$record->kota.')'
+                            )
+                            ->helperText('Hanya surat tugas yang belum memiliki data perjalanan'),
 
-                        Select::make('tipe_perjalanan')
-                            ->label('Perjalanan')
-                            ->options([
-                                'darat' => 'Darat',
-                                'laut' => 'Laut',
-                                'udara' => 'Udara',
-                            ])
-                            ->native(false)
-                            ->required(),
+                        ComponentsGrid::make(2)
+                            ->schema([
+                                TextInput::make('tiket_pergi')
+                                    ->label('Tiket Pergi')
+                                    ->numeric()
+                                    ->placeholder('1.069.900')
+                                    ->prefix('Rp. ')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, Get $get) => self::updateTotal($set, $get)),
 
-                        FileUpload::make('tiket')
-                            ->label('Bukti Tiket')
-                            ->directory("tiket")
-                            ->image()
-                            ->columnSpanFull(),
+                                TextInput::make('tiket_pulang')
+                                    ->label('Tiket Pulang')
+                                    ->numeric()
+                                    ->default(0)
+                                    ->placeholder('1.069.900')
+                                    ->prefix('Rp. ')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, Get $get) => self::updateTotal($set, $get)),
+                            ]),
 
-                        FileUpload::make('hotel')
-                            ->label('Bukti Hotel')
-                            ->directory("hotel")
-                            ->image()
-                            ->columnSpanFull(),
-
-                        TextInput::make('uang_saku')
-                            ->label('Uang Saku')
+                        TextInput::make('hotel')
+                            ->label('Hotel/Penginapan')
                             ->numeric()
-                            ->prefix('Rp. ')
-                            ->default(0)
-                            ->required(),
 
-                        TextInput::make('transport')
-                            ->label('Transport')
-                            ->numeric()
+                            ->placeholder('1.069.900')
                             ->prefix('Rp. ')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn (Set $set, Get $get) => self::updateTotal($set, $get)),
+
+                        ComponentsGrid::make(2)
+                            ->schema([
+                                TextInput::make('uang_harian')
+                                    ->label('Uang Harian')
+                                    ->numeric()
+
+                                    ->placeholder('1.069.900')
+                                    ->prefix('Rp. ')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, Get $get) => self::updateTotal($set, $get)),
+
+                                TextInput::make('uang_representasi')
+                                    ->label('Uang Representasi')
+                                    ->numeric()
+
+                                    ->placeholder('1.069.900')
+                                    ->prefix('Rp. ')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, Get $get) => self::updateTotal($set, $get)),
+                            ]),
+
+                        ComponentsGrid::make(2)
+                            ->schema([
+                                TextInput::make('transport_lokal_pergi')
+                                    ->label('Transport Lokal (Pergi)')
+                                    ->numeric()
+
+                                    ->placeholder('1.069.900')
+                                    ->prefix('Rp. ')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, Get $get) => self::updateTotal($set, $get)),
+
+                                TextInput::make('transport_lokal_pulang')
+                                    ->label('Transport Lokal (Pulang)')
+                                    ->numeric()
+
+                                    ->placeholder('1.069.900')
+                                    ->prefix('Rp. ')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, Get $get) => self::updateTotal($set, $get)),
+                            ]),
+
+                        TextInput::make('bbm_tol')
+                            ->label('BBM + Toll')
+                            ->numeric()
+
+                            ->placeholder('1.069.900')
+                            ->prefix('Rp. ')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn (Set $set, Get $get) => self::updateTotal($set, $get)),
+
+                        Hidden::make('jumlah_sppd')
                             ->default(0),
                     ])->columns(2),
 
-                Section::make('Summary')
+                Section::make('Jumlah SPPD')
                     ->schema([
-                        Placeholder::make('total_biaya')
-                            ->label('Total Biaya')
+                        Placeholder::make('total_display')
+                            ->label('Total biaya yang dikeluarkan')
                             ->content(function (Get $get) {
-                                $uangSaku = (int) $get('uang_saku');
-                                $transport = (int) $get('transport');
-                                $total = $uangSaku + $transport;
+                                $total = self::calculateTotal($get);
 
-                                return 'Rp '.number_format($total, 0, ',', ',');
+                                return 'Rp '.number_format($total, 0, ',', '.');
                             }),
                     ])->visibleOn(['create', 'edit']),
             ]);
+    }
+
+    public static function calculateTotal(Get $get): int
+    {
+        $tiketPergi = (int) ($get('tiket_pergi') ?? 0);
+        $tiketPulang = (int) ($get('tiket_pulang') ?? 0);
+        $hotel = (int) ($get('hotel') ?? 0);
+        $uangHarian = (int) ($get('uang_harian') ?? 0);
+        $uangRepresentasi = (int) ($get('uang_representasi') ?? 0);
+        $transportLokalPergi = (int) ($get('transport_lokal_pergi') ?? 0);
+        $transportLokalPulang = (int) ($get('transport_lokal_pulang') ?? 0);
+        $bbmTol = (int) ($get('bbm_tol') ?? 0);
+
+        return $tiketPergi + $tiketPulang + $hotel + $uangHarian +
+               $uangRepresentasi + $transportLokalPergi +
+               $transportLokalPulang + $bbmTol;
+    }
+
+    public static function updateTotal(Set $set, Get $get): void
+    {
+        $total = self::calculateTotal($get);
+        $set('jumlah_sppd', $total);
     }
 
     public static function table(Table $table): Table
@@ -112,7 +193,7 @@ class DataPerjalananResource extends Resource
                     ->label('Pegawai')
                     ->searchable(),
 
-                TextColumn::make('tipe_perjalanan')
+                TextColumn::make('angkutan')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'darat' => 'gray',
@@ -133,13 +214,9 @@ class DataPerjalananResource extends Resource
                 TextColumn::make('uang_saku')
                     ->label('Uang Saku')
                     ->money('IDR'),
-
-                TextColumn::make('transport')
-                    ->label('Biaya Transport')
-                    ->money('IDR'),
             ])
             ->filters([
-                SelectFilter::make('tipe_perjalanan')
+                SelectFilter::make('angkutan')
                     ->options([
                         'darat' => 'Darat',
                         'laut' => 'Laut',

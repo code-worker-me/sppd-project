@@ -14,11 +14,19 @@ return new class extends Migration
         Schema::create('data_perjalanan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sppd_id')->unique()->constrained('data_sppd')->onDelete('cascade');
-            $table->enum('tipe_perjalanan', ['darat', 'laut', 'udara'])->nullable();
-            $table->string('tiket', 255)->nullable();
-            $table->string('hotel', 255)->nullable();
-            $table->integer('uang_saku')->default(0);
-            $table->integer('transport')->default(0);
+            $table->integer('tiket_pergi')->default(0);
+            $table->integer('tiket_pulang')->default(0);
+            $table->integer('hotel')->default(0);
+            $table->integer('uang_harian')->default(0);
+            $table->integer('uang_representasi')->default(0);
+            $table->integer('transport_lokal_pergi')->default(0);
+            $table->integer('transport_lokal_pulang')->default(0);
+            $table->integer('bbm_tol')->default(0);
+            $table->integer('jumlah_sppd')->default(0);
+            $table->integer('saldo_umum')->default(0);
+            $table->integer('saldo_pengembangan')->default(0);
+            $table->integer('panjar_kerja')->default(0);
+            $table->integer('keterangan')->default(0);
             $table->timestamps();
         });
     }

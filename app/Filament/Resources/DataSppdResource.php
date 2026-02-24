@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DataSppdResource\Pages;
-use App\Filament\Resources\DataSppdResource\RelationManagers\PerjalananRelationManager;
 use App\Models\DataSppd;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
@@ -17,8 +16,6 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -49,17 +46,26 @@ class DataSppdResource extends Resource
                 Section::make('SPPD Information')
                     ->schema([
                         Select::make('user_id')
-                            ->label('Pegawai')
-                            ->relationship('user', 'name')
+                            ->label('Pegawai/Staff')
+                            ->relationship(
+                                name: 'user',
+                                titleAttribute: 'name',
+                                modifyQueryUsing: fn ($query) => $query->has('dataDiri')
+                            )
                             ->searchable()
                             ->preload()
                             ->required()
-                            ->native(false),
+                            ->native(false)
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->name.
+                                ($record->dataDiri?->nip ? ' - NIP: '.$record->dataDiri->nip : '')
+                            )
+                            ->helperText('Hanya pegawai yang terdaftar dapat dipilih'),
 
                         TextInput::make('st')
                             ->label('Nomor Surat Tugas')
                             ->required()
                             ->placeholder('019')
+                            ->unique()
                             ->maxLength(255),
 
                         TextInput::make('kota')
@@ -68,8 +74,19 @@ class DataSppdResource extends Resource
                             ->label('Kota Tujuan')
                             ->maxLength(255),
 
+                        Select::make('angkutan')
+                            ->required()
+                            ->label('Angkutan')
+                            ->options([
+                                'darat' => 'Darat',
+                                'udara' => 'Udara',
+                                'laut' => 'Laut',
+                            ])
+                            ->default('darat'),
+
                         Textarea::make('deskripsi')
                             ->label('Uraian Kegiatan')
+                            ->placeholder('Penyampaian Proposal Penawaran Kerjasama Program Ramadhan 2026.')
                             ->rows(3)
                             ->columnSpanFull(),
 
@@ -96,10 +113,9 @@ class DataSppdResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('st')
-                    ->label('Surat Tugas')
+                    ->label('Surat Tugas Nomor')
                     ->sortable()
-                    ->searchable()
-                    ->copyable(),
+                    ->searchable(),
 
                 TextColumn::make('user.name')
                     ->label('Pegawai')
@@ -111,15 +127,17 @@ class DataSppdResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                TextColumn::make('tg_berangkat')
-                    ->label('Berangkat')
-                    ->date('d-m-Y')
-                    ->sortable(),
-
-                TextColumn::make('tg_pulang')
-                    ->label('Pulang')
-                    ->date('d-m-Y')
-                    ->sortable(),
+                TextColumn::make('angkutan')
+                    ->label('Angkutan')
+                    ->sortable()
+                    ->formatStateUsing(fn (?string $state): ?string => $state ? ucwords($state) : '-')
+                    ->searchable()
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'darat' => 'gray',
+                        'udara' => 'success',
+                        'laut' => 'warning'
+                    }),
             ])
             ->filters([
                 SelectFilter::make('user_id')
@@ -133,11 +151,11 @@ class DataSppdResource extends Resource
                     ->form([
                         DatePicker::make('from')
                             ->label('Berangkat')
-                            ->placeholder("20-02-2025")
+                            ->placeholder('20-02-2025')
                             ->native(false),
                         DatePicker::make('until')
                             ->label('Pulang')
-                            ->placeholder("26-02-2025")
+                            ->placeholder('26-02-2025')
                             ->native(false),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
@@ -159,7 +177,7 @@ class DataSppdResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->label("Hapus Data Pilihan"),
+                        ->label('Hapus Data Pilihan'),
                 ]),
             ]);
     }
@@ -175,6 +193,7 @@ class DataSppdResource extends Resource
                             ->label('Nomor Surat Tugas')
                             ->weight('bold')
                             ->color('primary')
+                            ->copyable()
                             ->icon('heroicon-o-document-text'),
 
                         TextEntry::make('user.name')
@@ -212,7 +231,23 @@ class DataSppdResource extends Resource
                             ->label('Durasi Perjalanan')
                             ->weight('bold')
                             ->icon('heroicon-s-clock')
+                            ->prefix("hari: ")
                             ->color('secondary'),
+
+                        TextEntry::make('angkutan')
+                            ->label('Angkutan')
+                            ->weight('bold')
+                            ->badge()
+                            ->icon(fn (string $state): string => match ($state) {
+                                'darat' => 'heroicon-o-truck',
+                                'udara' => 'heroicon-o-paper-airplane',
+                                'laut' => 'heroicon-o-backward'
+                            })
+                            ->color(fn (string $state): string => match ($state) {
+                                'darat' => 'gray',
+                                'udara' => 'success',
+                                'laut' => 'warning'
+                            }),
 
                         TextEntry::make('deskripsi')
                             ->label('Uraian Perjalanan')
@@ -224,7 +259,7 @@ class DataSppdResource extends Resource
     public static function getRelations(): array
     {
         return [
-            PerjalananRelationManager::class,
+            //
         ];
     }
 

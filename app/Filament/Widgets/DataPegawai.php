@@ -59,12 +59,13 @@ class DataPegawai extends BaseWidget
                     ->placeholder('Belum diisi'),
 
                 TextColumn::make('user.role')
-                    ->label("Hak Akses")
+                    ->label('Hak Akses')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'admin' => 'gray',
-                        'staff' => 'warning',
-                        'user' => 'success',
+                        'user' => 'gray',
+                        'staff_sdm' => 'success',
+                        'staff_keuangan' => 'warning',
+                        'admin' => 'danger',
                     })
                     ->formatStateUsing(fn (?string $state): ?string => $state ? ucwords($state) : '-')
                     ->sortable(),
@@ -74,20 +75,21 @@ class DataPegawai extends BaseWidget
             ->poll('60s')
             ->filters([
                 SelectFilter::make('unit_kerja')
-                    ->label("Unit Kerja")
+                    ->label('Unit Kerja')
                     ->options(fn () => DataDiri::pluck('unit_kerja', 'unit_kerja')->unique()->toArray())
                     ->native(false),
 
                 SelectFilter::make('role')
-                    ->label("Hak Akses")
+                    ->label('Hak Akses')
                     ->relationship('user', 'role')
                     ->preload()
                     ->options([
                         'admin' => 'Admin',
-                        'staff' => 'Staff',
-                        'user' => 'User'
+                        'staff_keuangan' => 'Staff Keuangan',
+                        'staff_sdm' => 'Staff SDM',
+                        'user' => 'User',
                     ])
-                    ->native(false)
+                    ->native(false),
             ])
             ->actions([
                 Action::make('view')

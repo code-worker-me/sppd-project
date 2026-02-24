@@ -13,6 +13,7 @@ class DataSppd extends Model
         'st',
         'kota',
         'deskripsi',
+        'angkutan',
         'tg_berangkat',
         'tg_pulang',
     ];
