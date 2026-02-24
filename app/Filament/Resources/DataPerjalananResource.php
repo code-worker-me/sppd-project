@@ -71,6 +71,7 @@ class DataPerjalananResource extends Resource
                                 TextInput::make('tiket_pergi')
                                     ->label('Tiket Pergi')
                                     ->numeric()
+                                    ->default(0)
                                     ->placeholder('1.069.900')
                                     ->prefix('Rp. ')
                                     ->live(onBlur: true)
@@ -88,8 +89,8 @@ class DataPerjalananResource extends Resource
 
                         TextInput::make('hotel')
                             ->label('Hotel/Penginapan')
+                            ->default(0)
                             ->numeric()
-
                             ->placeholder('1.069.900')
                             ->prefix('Rp. ')
                             ->live(onBlur: true)
@@ -100,7 +101,7 @@ class DataPerjalananResource extends Resource
                                 TextInput::make('uang_harian')
                                     ->label('Uang Harian')
                                     ->numeric()
-
+                                    ->default(0)
                                     ->placeholder('1.069.900')
                                     ->prefix('Rp. ')
                                     ->live(onBlur: true)
@@ -109,7 +110,7 @@ class DataPerjalananResource extends Resource
                                 TextInput::make('uang_representasi')
                                     ->label('Uang Representasi')
                                     ->numeric()
-
+                                    ->default(0)
                                     ->placeholder('1.069.900')
                                     ->prefix('Rp. ')
                                     ->live(onBlur: true)
@@ -121,7 +122,7 @@ class DataPerjalananResource extends Resource
                                 TextInput::make('transport_lokal_pergi')
                                     ->label('Transport Lokal (Pergi)')
                                     ->numeric()
-
+                                    ->default(0)
                                     ->placeholder('1.069.900')
                                     ->prefix('Rp. ')
                                     ->live(onBlur: true)
@@ -130,7 +131,7 @@ class DataPerjalananResource extends Resource
                                 TextInput::make('transport_lokal_pulang')
                                     ->label('Transport Lokal (Pulang)')
                                     ->numeric()
-
+                                    ->default(0)
                                     ->placeholder('1.069.900')
                                     ->prefix('Rp. ')
                                     ->live(onBlur: true)
@@ -140,7 +141,7 @@ class DataPerjalananResource extends Resource
                         TextInput::make('bbm_tol')
                             ->label('BBM + Toll')
                             ->numeric()
-
+                            ->default(0)
                             ->placeholder('1.069.900')
                             ->prefix('Rp. ')
                             ->live(onBlur: true)
@@ -189,30 +190,21 @@ class DataPerjalananResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('sppd.user.name')
-                    ->label('Pegawai')
+                TextColumn::make('sppd.st')
+                    ->label('Nomor Surat Tugas')
                     ->searchable(),
 
-                TextColumn::make('angkutan')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'darat' => 'gray',
-                        'laut' => 'warning',
-                        'udara' => 'success',
-                    })
-                    ->icons([
-                        'heroicon-o-truck' => 'darat',
-                        'heroicon-o-cloud' => 'laut',
-                        'heroicon-o-paper-airplane' => 'udara',
-                    ])
-                    ->sortable(),
+                TextColumn::make('sppd.user.name')
+                    ->label('Pegawai')
+                    ->description(fn ($record): string => $record->sppd?->user?->dataDiri?->nip ?? '-'),
 
                 TextColumn::make('sppd.kota')
                     ->label('Kota/Tujuan')
+                    ->description(fn ($record): string => $record->sppd?->angkutan ?? '-')
                     ->searchable(),
 
-                TextColumn::make('uang_saku')
-                    ->label('Uang Saku')
+                TextColumn::make('jumlah_sppd')
+                    ->label('Total SPPD')
                     ->money('IDR'),
             ])
             ->filters([
@@ -240,7 +232,7 @@ class DataPerjalananResource extends Resource
             ->schema([
                 // Informasi SPPD
                 InfolistSection::make('Informasi Surat Tugas')
-                    ->description('Detail dari perjalanan dinas yang diajukan.')
+                    ->description('Detail SPPD perjalanan dinas yang diajukan.')
                     ->schema([
                         TextEntry::make('sppd.st')
                             ->label('Nomor Surat Tugas')
@@ -252,27 +244,39 @@ class DataPerjalananResource extends Resource
                             ->label('Nama Pegawai')
                             ->icon('heroicon-o-user'),
 
+                        TextEntry::make('sppd.tg_berangkat')
+                            ->label('Tanggal Berangkat')
+                            ->date('d F Y')
+                            ->icon('heroicon-o-calendar'),
+
+                        TextEntry::make('sppd.tg_pulang')
+                            ->label('Tanggal Pulang')
+                            ->date('d F Y')
+                            ->icon('heroicon-o-calendar'),
+
                         TextEntry::make('sppd.deskripsi')
                             ->label('Uraian Perjalanan')
                             ->columnSpanFull(),
 
-                        Grid::make(3)
-                            ->schema([
-                                TextEntry::make('sppd.kota')
-                                    ->label('Kota Tujuan')
-                                    ->icon('heroicon-o-map-pin')
-                                    ->color('success'),
+                        TextEntry::make('sppd.kota')
+                            ->label('Kota Tujuan')
+                            ->icon('heroicon-o-map-pin')
+                            ->color('success'),
 
-                                TextEntry::make('sppd.tg_berangkat')
-                                    ->label('Tanggal Berangkat')
-                                    ->date('d F Y')
-                                    ->icon('heroicon-o-calendar'),
-
-                                TextEntry::make('sppd.tg_pulang')
-                                    ->label('Tanggal Pulang')
-                                    ->date('d F Y')
-                                    ->icon('heroicon-o-calendar'),
-                            ]),
+                        TextEntry::make('sppd.angkutan')
+                            ->label('Angkutan')
+                            ->badge()
+                            ->formatStateUsing(fn (?string $state): ?string => $state ? ucwords($state) : '-')
+                            ->color(fn (string $state): string => match ($state) {
+                                'darat' => 'gray',
+                                'udara' => 'success',
+                                'laut' => 'warning'
+                            })
+                            ->icon(fn (string $state): string => match ($state) {
+                                'darat' => 'fas-bus',
+                                'udara' => 'fas-plane',
+                                'laut' => 'fas-ship',
+                            }),
                     ])
                     ->columns(2),
 

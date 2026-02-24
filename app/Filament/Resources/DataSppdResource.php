@@ -119,11 +119,12 @@ class DataSppdResource extends Resource
 
                 TextColumn::make('user.name')
                     ->label('Pegawai')
-                    ->sortable()
+                    ->description(fn (DataSppd $record): string => $record->user?->dataDiri?->nip ?? '-')
                     ->searchable(),
 
                 TextColumn::make('kota')
                     ->label('Kota/Tujuan')
+                    ->icon('ionicon-pin-sharp')
                     ->sortable()
                     ->searchable(),
 
@@ -133,6 +134,11 @@ class DataSppdResource extends Resource
                     ->formatStateUsing(fn (?string $state): ?string => $state ? ucwords($state) : '-')
                     ->searchable()
                     ->badge()
+                    ->icon(fn (string $state): string => match ($state) {
+                                'darat' => 'fas-bus',
+                                'udara' => 'fas-plane',
+                                'laut' => 'fas-ship',
+                            })
                     ->color(fn (string $state): string => match ($state) {
                         'darat' => 'gray',
                         'udara' => 'success',
