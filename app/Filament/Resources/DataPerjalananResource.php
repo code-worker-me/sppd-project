@@ -282,29 +282,49 @@ class DataPerjalananResource extends Resource
 
                 // Informasi Perjalanan
                 InfolistSection::make('Detail Perjalanan')
-                    ->description('Informasi detail perjalanan dan biaya.')
+                    ->description('Informasi detail biaya dikeluarkan.')
                     ->schema([
-                        TextEntry::make('tipe_perjalanan')
-                            ->label('Tipe Perjalanan')
-                            ->badge()
-                            ->color(fn (string $state): string => match ($state) {
-                                'darat' => 'gray',
-                                'laut' => 'warning',
-                                'udara' => 'success',
-                            })
-                            ->formatStateUsing(fn (?string $state): ?string => $state ? ucwords($state) : '-'),
-
-                        TextEntry::make('uang_saku')
-                            ->label('Uang Saku')
+                        TextEntry::make('tiket_pergi')
+                            ->label('Tiket Pergi')
                             ->money('IDR')
                             ->icon('heroicon-o-banknotes'),
 
-                        TextEntry::make('transport')
-                            ->label('Biaya Transport')
+                        TextEntry::make('tiket_pulang')
+                            ->label('Tiket Pulang')
                             ->money('IDR')
-                            ->icon('heroicon-o-truck'),
+                            ->icon('heroicon-o-banknotes'),
 
-                        TextEntry::make('total_biaya')
+                        TextEntry::make('hotel')
+                            ->label('Tiket Hotel')
+                            ->money('IDR')
+                            ->icon('heroicon-o-banknotes'),
+
+                        TextEntry::make('uang_harian')
+                            ->label('Uang Harian')
+                            ->money('IDR')
+                            ->icon('heroicon-o-banknotes'),
+
+                        TextEntry::make('uang_representasi')
+                            ->label('Uang Representasi')
+                            ->money('IDR')
+                            ->icon('heroicon-o-banknotes'),
+
+                        TextEntry::make('transport_lokal_pergi')
+                            ->label('Transport Lokal (Pergi)')
+                            ->money('IDR')
+                            ->icon('heroicon-o-banknotes'),
+
+                        TextEntry::make('transport_lokal_pulang')
+                            ->label('Transport Lokal (Pulang)')
+                            ->money('IDR')
+                            ->icon('heroicon-o-banknotes'),
+
+                        TextEntry::make('bbm_tol')
+                            ->label('BBM + Toll')
+                            ->money('IDR')
+                            ->icon('heroicon-o-banknotes'),
+
+                        TextEntry::make('jumlah_sppd')
                             ->label('Total Biaya')
                             ->money('IDR')
                             ->weight('bold')

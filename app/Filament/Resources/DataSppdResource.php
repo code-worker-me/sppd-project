@@ -125,6 +125,7 @@ class DataSppdResource extends Resource
                 TextColumn::make('kota')
                     ->label('Kota/Tujuan')
                     ->icon('ionicon-pin-sharp')
+                    ->iconColor('warning')
                     ->sortable()
                     ->searchable(),
 
@@ -243,11 +244,12 @@ class DataSppdResource extends Resource
                         TextEntry::make('angkutan')
                             ->label('Angkutan')
                             ->weight('bold')
+                            ->formatStateUsing(fn (?string $state): ?string => $state ? ucwords($state) : '-')
                             ->badge()
                             ->icon(fn (string $state): string => match ($state) {
-                                'darat' => 'heroicon-o-truck',
-                                'udara' => 'heroicon-o-paper-airplane',
-                                'laut' => 'heroicon-o-backward'
+                                'darat' => 'fas-bus',
+                                'udara' => 'fas-plane',
+                                'laut' => 'fas-ship',
                             })
                             ->color(fn (string $state): string => match ($state) {
                                 'darat' => 'gray',

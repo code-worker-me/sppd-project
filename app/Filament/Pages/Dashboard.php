@@ -4,30 +4,32 @@ namespace App\Filament\Pages;
 
 use App\Filament\Widgets\DataPegawai;
 use App\Filament\Widgets\DataPerjalanan;
+use App\Filament\Widgets\PerjalananOverview;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
 {
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
-    protected static ?string $title = 'Dashboard SPPD';
+    protected static ?string $title = 'SPPD';
 
     protected static ?string $navigationLabel = 'Dashboard';
 
     public function getHeading(): string
     {
-        return 'Dashboard Perjalanan Dinas';
+        return 'Dashboard SPPD';
     }
 
     public function getSubheading(): ?string
     {
-        return 'Statistik dan ringkasan perjalanan dinas pegawai';
+        return 'Table dan ringkasan perjalanan dinas pegawai SPPD.';
     }
 
     public function getWidgets(): array
     {
         return [
             DataPerjalanan::class,
+            PerjalananOverview::class,
             DataPegawai::class,
         ];
     }

@@ -95,8 +95,7 @@ class DataPegawai extends BaseWidget
                 Action::make('view')
                     ->label('Lihat')
                     ->icon('heroicon-m-eye')
-                    ->url(fn (DataDiri $record): string => route('filament.admin.resources.data-diris.view', $record))
-                    ->openUrlInNewTab(),
+                    ->url(fn (DataDiri $record): string => route('filament.admin.resources.data-diris.view', $record)),
             ]);
     }
 }
