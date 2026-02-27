@@ -1,12 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 
 Route::view('/', 'welcome');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/history', [DashboardController::class, 'history'])->name('history');
+    Route::get('/history/{id}', [DashboardController::class, 'show'])->name('view.history');
+});
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
