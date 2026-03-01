@@ -50,7 +50,7 @@ class DataPegawai extends BaseWidget
                     ->placeholder('Belum diisi'),
 
                 TextColumn::make('pangkat')
-                    ->label('Pangkat')
+                    ->label('Pangkat/Gol')
                     ->searchable()
                     ->sortable()
                     ->badge()

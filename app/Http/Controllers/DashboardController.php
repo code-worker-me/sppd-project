@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SppdExport;
+use App\Models\DataPerjalanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
-use App\Models\DataPerjalanan;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
@@ -20,7 +21,26 @@ class DashboardController extends Controller
             ->latest('created_at')
             ->first();
 
+        if (! $perjalanan) {
+            return view('dashboard', [
+                'user' => $user,
+                'sppd' => null,
+                'perjalanan' => null,
+                'message' => 'Anda belum memiliki data perjalanan dinas.',
+                'messageType' => 'info',
+            ]);
+        }
+
         $sppd = $perjalanan->sppd;
+        if (! $sppd) {
+            return view('dashboard', [
+                'user' => $user,
+                'sppd' => null,
+                'perjalanan' => null,
+                'message' => 'Data SPPD tidak ditemukan. Silakan hubungi administrator.',
+                'messageType' => 'error',
+            ]);
+        }
 
         return view('dashboard', compact('user', 'sppd', 'perjalanan'));
     }
@@ -60,5 +80,21 @@ class DashboardController extends Controller
         $sppd = $perjalanan->sppd;
 
         return view('dashboard.view-history', compact('user', 'sppd', 'perjalanan'));
+    }
+
+    public function export(Request $request)
+    {
+        $year = $request->get('year', date('Y'));
+        $month = $request->get('month', null);
+
+        $filename = 'SPPD_' . strtoupper(config('app.name', 'TVRI')) . '_' . $year;
+
+        if ($month) {
+            $filename .= '_' . str_pad($month, 2, '0', STR_PAD_LEFT);
+        }
+
+        $filename .= '.xlsx';
+
+        return Excel::download(new SppdExport($year, $month), $filename);
     }
 }

@@ -116,7 +116,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
                 <div class="p-6">
                     <!-- Header Section 2 -->
@@ -125,115 +124,129 @@
                         <p class="text-sm text-gray-600 mt-1">Detail surat tugas dan perjalanan dinas</p>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Surat Tugas -->
-                        <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
-                                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                Nomor Surat Tugas
-                            </label>
-                            <p class="text-base font-semibold text-gray-900">{{ $sppd->st ?? '-' }}</p>
-                        </div>
-
-                        <!-- Kota -->
-                        <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
-                                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                Kota Tujuan
-                            </label>
-                            <div>
-                                <span
-                                    class="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-green-50 text-green-800 border border-green-200">
-                                    {{ $sppd->kota ?? '-' }}
-                                </span>
+                    @if (!$perjalanan || !$sppd)
+                        <div class="bg-white overflow-hidden">
+                            <div class="p-12 text-center mb-4">
+                                <h3 class="mt-4 text-lg font-medium text-gray-900">Belum Ada Data</h3>
+                                <p class="mt-2 text-sm text-gray-500">
+                                    Anda belum memiliki data perjalanan dinas. Silakan hubungi administrator untuk
+                                    menambahkan data.
+                                </p>
                             </div>
                         </div>
+                    @else
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Surat Tugas -->
+                            <div class="space-y-1">
+                                <label
+                                    class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    Nomor Surat Tugas
+                                </label>
+                                <p class="text-base font-semibold text-gray-900">{{ $sppd->st ?? '-' }}</p>
+                            </div>
 
-                        <!-- Tanggal Berangkat -->
-                        <div class="space-y-1">
-                            <label
-                                class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
-                                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                Tanggal Berangkat
-                            </label>
-                            <p class="text-base text-gray-900">
-                                {{ $sppd->tg_berangkat ? $sppd->tg_berangkat->format('d F Y') : '-' }}</p>
-                        </div>
+                            <!-- Kota -->
+                            <div class="space-y-1">
+                                <label
+                                    class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    Kota Tujuan
+                                </label>
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-green-50 text-green-800 border border-green-200">
+                                        {{ $sppd->kota ?? '-' }}
+                                    </span>
+                                </div>
+                            </div>
 
-                        <!-- Tanggal Pulang -->
-                        <div class="space-y-1">
-                            <label
-                                class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
-                                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                Tanggal Pulang
-                            </label>
-                            <p class="text-base text-gray-900">
-                                {{ $sppd->tg_pulang ? $sppd->tg_pulang->format('d F Y') : '-' }}</p>
-                        </div>
+                            <!-- Tanggal Berangkat -->
+                            <div class="space-y-1">
+                                <label
+                                    class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Tanggal Berangkat
+                                </label>
+                                <p class="text-base text-gray-900">
+                                    {{ $sppd->tg_berangkat ? $sppd->tg_berangkat->format('d F Y') : '-' }}</p>
+                            </div>
 
-                        <!-- Angkutan -->
-                        <div class="space-y-1">
-                            <label
-                                class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
-                                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                </svg>
-                                Jenis Angkutan
-                            </label>
-                            <div>
-                                @php
-                                    $angkutanColors = [
-                                        'darat' => 'bg-gray-100 text-gray-800 border-gray-200',
-                                        'laut' => 'bg-blue-100 text-blue-800 border-blue-200',
-                                        'udara' => 'bg-sky-100 text-sky-800 border-sky-200',
-                                    ];
-                                    $angkutan = $sppd->angkutan ?? 'darat';
-                                    $colorClass =
-                                        $angkutanColors[$angkutan] ?? 'bg-gray-100 text-gray-800 border-gray-200';
-                                @endphp
-                                <span
-                                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border {{ $colorClass }}">
-                                    {{ ucfirst($angkutan) }}
-                                </span>
+                            <!-- Tanggal Pulang -->
+                            <div class="space-y-1">
+                                <label
+                                    class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Tanggal Pulang
+                                </label>
+                                <p class="text-base text-gray-900">
+                                    {{ $sppd->tg_pulang ? $sppd->tg_pulang->format('d F Y') : '-' }}</p>
+                            </div>
+
+                            <!-- Angkutan -->
+                            <div class="space-y-1">
+                                <label
+                                    class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                    </svg>
+                                    Jenis Angkutan
+                                </label>
+                                <div>
+                                    @php
+                                        $angkutanColors = [
+                                            'darat' => 'bg-gray-100 text-gray-800 border-gray-200',
+                                            'laut' => 'bg-blue-100 text-blue-800 border-blue-200',
+                                            'udara' => 'bg-sky-100 text-sky-800 border-sky-200',
+                                        ];
+                                        $angkutan = $sppd->angkutan ?? 'darat';
+                                        $colorClass =
+                                            $angkutanColors[$angkutan] ?? 'bg-gray-100 text-gray-800 border-gray-200';
+                                    @endphp
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border {{ $colorClass }}">
+                                        {{ ucfirst($angkutan) }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Uraian Perjalanan -->
+                            <div class="space-y-1 md:col-span-2">
+                                <label
+                                    class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 6h16M4 12h16M4 18h7" />
+                                    </svg>
+                                    Uraian Perjalanan
+                                </label>
+                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <p class="text-base text-gray-900">{{ $sppd->deskripsi }}</p>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Uraian Perjalanan -->
-                        <div class="space-y-1 md:col-span-2">
-                            <label
-                                class="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
-                                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h7" />
-                                </svg>
-                                Uraian Perjalanan
-                            </label>
-                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                <p class="text-base text-gray-900">{{ $sppd->deskripsi }}</p>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
 
@@ -253,189 +266,212 @@
                             dinas</p>
                     </div>
 
-                    <!-- Table -->
-                    <div class="overflow-hidden border border-gray-200 rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Jenis Biaya
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Nominal
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <!-- Tiket Pergi -->
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <span class="text-2xl mr-3">✈️</span>
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Tiket Pergi</div>
-                                                <div class="text-xs text-gray-500">Transportasi menuju lokasi</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <div class="text-sm font-semibold text-gray-900">
-                                            Rp {{ number_format($perjalanan->tiket_pergi ?? 0, 0, ',', '.') }}
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <!-- Tiket Pulang -->
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <span class="text-2xl mr-3">🏠</span>
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Tiket Pulang</div>
-                                                <div class="text-xs text-gray-500">Transportasi kembali ke asal</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <div class="text-sm font-semibold text-gray-900">
-                                            Rp {{ number_format($perjalanan->tiket_pulang ?? 0, 0, ',', '.') }}
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <!-- Hotel -->
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <span class="text-2xl mr-3">🏨</span>
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Hotel/Penginapan</div>
-                                                <div class="text-xs text-gray-500">Biaya akomodasi</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <div class="text-sm font-semibold text-gray-900">
-                                            Rp {{ number_format($perjalanan->hotel ?? 0, 0, ',', '.') }}
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <!-- Uang Harian -->
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <span class="text-2xl mr-3">💵</span>
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Uang Harian</div>
-                                                <div class="text-xs text-gray-500">Biaya konsumsi harian</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <div class="text-sm font-semibold text-gray-900">
-                                            Rp {{ number_format($perjalanan->uang_harian ?? 0, 0, ',', '.') }}
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <!-- Uang Representasi -->
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <span class="text-2xl mr-3">💼</span>
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Uang Representasi</div>
-                                                <div class="text-xs text-gray-500">Biaya representasi</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <div class="text-sm font-semibold text-gray-900">
-                                            Rp {{ number_format($perjalanan->uang_representasi ?? 0, 0, ',', '.') }}
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <!-- Transport Lokal Pergi -->
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <span class="text-2xl mr-3">🚖</span>
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Transport Lokal (Pergi)
+                    @if (!$perjalanan || !$sppd)
+                        <div class="bg-white overflow-hidden">
+                            <div class="p-12 text-center mb-4">
+                                <h3 class="mt-4 text-lg font-medium text-gray-900">Belum Ada Data</h3>
+                                <p class="mt-2 text-sm text-gray-500">
+                                    Anda belum memiliki data perjalanan dinas. Silakan hubungi administrator untuk
+                                    menambahkan data.
+                                </p>
+                            </div>
+                        </div>
+                    @else
+                        <!-- Table -->
+                        <div class="overflow-hidden border border-gray-200 rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Jenis Biaya
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Nominal
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <!-- Tiket Pergi -->
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <span class="text-2xl mr-3">✈️</span>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-900">Tiket Pergi</div>
+                                                    <div class="text-xs text-gray-500">Transportasi menuju lokasi</div>
                                                 </div>
-                                                <div class="text-xs text-gray-500">Transportasi lokal di tujuan</div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <div class="text-sm font-semibold text-gray-900">
-                                            Rp {{ number_format($perjalanan->transport_lokal_pergi ?? 0, 0, ',', '.') }}
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-semibold text-gray-900">
+                                                Rp {{ number_format($perjalanan->tiket_pergi ?? 0, 0, ',', '.') }}
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                                <!-- Transport Lokal Pulang -->
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <span class="text-2xl mr-3">🚕</span>
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Transport Lokal (Pulang)
+                                    <!-- Tiket Pulang -->
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <span class="text-2xl mr-3">🏠</span>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-900">Tiket Pulang</div>
+                                                    <div class="text-xs text-gray-500">Transportasi kembali ke asal
+                                                    </div>
                                                 </div>
-                                                <div class="text-xs text-gray-500">Transportasi lokal kepulangan</div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <div class="text-sm font-semibold text-gray-900">
-                                            Rp {{ number_format($perjalanan->transport_lokal_pulang ?? 0, 0, ',', '.') }}
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-semibold text-gray-900">
+                                                Rp {{ number_format($perjalanan->tiket_pulang ?? 0, 0, ',', '.') }}
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                                <!-- BBM + Toll -->
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <span class="text-2xl mr-3">⛽</span>
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">BBM + Toll</div>
-                                                <div class="text-xs text-gray-500">Bahan bakar dan tol</div>
+                                    <!-- Hotel -->
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <span class="text-2xl mr-3">🏨</span>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-900">Hotel/Penginapan
+                                                    </div>
+                                                    <div class="text-xs text-gray-500">Biaya akomodasi</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <div class="text-sm font-semibold text-gray-900">
-                                            Rp {{ number_format($perjalanan->bbm_tol ?? 0, 0, ',', '.') }}
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-semibold text-gray-900">
+                                                Rp {{ number_format($perjalanan->hotel ?? 0, 0, ',', '.') }}
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                                <!-- Total -->
-                                <tr class="bg-green-50 border-t-2 border-green-200">
-                                    <td class="px-6 py-5 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <span class="text-3xl mr-3">💰</span>
-                                            <div>
-                                                <div class="text-base font-bold text-green-900 uppercase">Total Biaya
-                                                    SPPD</div>
-                                                <div class="text-xs text-green-700">Jumlah keseluruhan biaya</div>
+                                    <!-- Uang Harian -->
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <span class="text-2xl mr-3">💵</span>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-900">Uang Harian</div>
+                                                    <div class="text-xs text-gray-500">Biaya konsumsi harian</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 whitespace-nowrap text-right">
-                                        <div class="text-2xl font-bold text-green-600">
-                                            Rp {{ number_format($perjalanan->jumlah_sppd ?? 0, 0, ',', '.') }}
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-semibold text-gray-900">
+                                                Rp {{ number_format($perjalanan->uang_harian ?? 0, 0, ',', '.') }}
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Uang Representasi -->
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <span class="text-2xl mr-3">💼</span>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-900">Uang Representasi
+                                                    </div>
+                                                    <div class="text-xs text-gray-500">Biaya representasi</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-semibold text-gray-900">
+                                                Rp
+                                                {{ number_format($perjalanan->uang_representasi ?? 0, 0, ',', '.') }}
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Transport Lokal Pergi -->
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <span class="text-2xl mr-3">🚖</span>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-900">Transport Lokal
+                                                        (Pergi)
+                                                    </div>
+                                                    <div class="text-xs text-gray-500">Transportasi lokal di tujuan
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-semibold text-gray-900">
+                                                Rp
+                                                {{ number_format($perjalanan->transport_lokal_pergi ?? 0, 0, ',', '.') }}
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Transport Lokal Pulang -->
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <span class="text-2xl mr-3">🚕</span>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-900">Transport Lokal
+                                                        (Pulang)
+                                                    </div>
+                                                    <div class="text-xs text-gray-500">Transportasi lokal kepulangan
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-semibold text-gray-900">
+                                                Rp
+                                                {{ number_format($perjalanan->transport_lokal_pulang ?? 0, 0, ',', '.') }}
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- BBM + Toll -->
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <span class="text-2xl mr-3">⛽</span>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-900">BBM + Toll</div>
+                                                    <div class="text-xs text-gray-500">Bahan bakar dan tol</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-semibold text-gray-900">
+                                                Rp {{ number_format($perjalanan->bbm_tol ?? 0, 0, ',', '.') }}
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Total -->
+                                    <tr class="bg-green-50 border-t-2 border-green-200">
+                                        <td class="px-6 py-5 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <span class="text-3xl mr-3">💰</span>
+                                                <div>
+                                                    <div class="text-base font-bold text-green-900 uppercase">Total
+                                                        Biaya
+                                                        SPPD</div>
+                                                    <div class="text-xs text-green-700">Jumlah keseluruhan biaya</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5 whitespace-nowrap text-right">
+                                            <div class="text-2xl font-bold text-green-600">
+                                                Rp {{ number_format($perjalanan->jumlah_sppd ?? 0, 0, ',', '.') }}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
