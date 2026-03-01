@@ -27,6 +27,7 @@ return new class extends Migration
             $table->integer('saldo_pengembangan')->default(0);
             $table->integer('panjar_kerja')->default(0);
             $table->integer('keterangan')->default(0);
+            $table->json('lampiran')->nullable();
             $table->timestamps();
         });
     }

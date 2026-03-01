@@ -23,9 +23,11 @@ class DataPerjalanan extends Model
         'saldo_pengembangan',
         'panjar_kerja',
         'ketarangan',
+        'lampiran'
     ];
 
     protected $casts = [
+        'lampiran' => 'array',
         'tiket_pergi' => 'integer',
         'tiket_pulang' => 'integer',
         'hotel' => 'integer',

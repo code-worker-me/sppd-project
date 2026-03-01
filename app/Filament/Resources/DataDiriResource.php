@@ -181,6 +181,11 @@ class DataDiriResource extends Resource
                             ->label("Nama Pegawai")
                             ->icon('heroicon-o-user'),
 
+                        TextEntry::make("user.email")
+                            ->label("Email Pegawai")
+                            ->copyable()
+                            ->icon('heroicon-o-at-symbol'),
+
                         TextEntry::make('unit_kerja')
                             ->label("Unit Kerja")
                             ->icon('heroicon-s-briefcase')
@@ -188,6 +193,11 @@ class DataDiriResource extends Resource
 
                         TextEntry::make('pangkat')
                             ->label('Pangkat/Gol'),
+
+                        TextEntry::make('user.role')
+                            ->label('Hak Akses')
+                            ->badge()
+                            ->formatStateUsing(fn (?string $state): ?string => $state ? ucwords($state) : '-'),
                     ])->columns(2)
             ]);
     }

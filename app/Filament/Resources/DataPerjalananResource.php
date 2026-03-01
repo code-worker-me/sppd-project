@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DataPerjalananResource\Pages;
 use App\Models\DataPerjalanan;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid as ComponentsGrid;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
@@ -13,7 +14,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section as InfolistSection;
 use Filament\Infolists\Components\TextEntry;
@@ -150,6 +150,19 @@ class DataPerjalananResource extends Resource
                         Hidden::make('jumlah_sppd')
                             ->default(0),
                     ])->columns(2),
+
+                Section::make('Lampiran')
+                    ->schema([
+                        FileUpload::make('lampiran')
+                            ->label('Lampiran (Bisa lebih dari 1)')
+                            ->multiple(true)
+                            ->disk('public')
+                            ->directory('lampiran-perjalanan')
+                            ->reorderable(true)
+                            ->openable(true)
+                            ->downloadable(true)
+                            ->columnSpanFull(),
+                    ]),
 
                 Section::make('Jumlah SPPD')
                     ->schema([
@@ -338,32 +351,14 @@ class DataPerjalananResource extends Resource
                 InfolistSection::make('Dokumen Lampiran')
                     ->description('Bukti atau dokumen pendukung perjalanan.')
                     ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                InfolistSection::make('Bukti Tiket')
-                                    ->schema([
-                                        ImageEntry::make('tiket')
-                                            ->extraImgAttributes([
-                                                'alt' => 'Bukti Tiket',
-                                                'loading' => 'lazy',
-                                                'class' => 'rounded-lg shadow-md object-cover',
-                                            ]),
-                                    ])
-                                    ->collapsible(),
-
-                                InfolistSection::make('Bukti Hotel')
-                                    ->schema([
-                                        ImageEntry::make('hotel')
-                                            ->extraImgAttributes([
-                                                'alt' => 'Bukti Hotel',
-                                                'loading' => 'lazy',
-                                                'class' => 'rounded-lg shadow-md object-cover',
-                                            ]),
-                                    ])
-                                    ->collapsible(),
+                        ImageEntry::make('lampiran')
+                            ->label('Bukti Foto')
+                            ->extraImgAttributes([
+                                'loading' => 'lazy',
+                                'class' => 'rounded-lg shadow-md object-cover',
                             ]),
                     ])
-                    ->collapsible(),
+                    ->collapsed(true),
             ]);
     }
 
