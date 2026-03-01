@@ -19,21 +19,21 @@ class PegawaiPolicy
 
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin']);
+        return in_array($user->role, ['admin', 'staff_sdm']);
     }
 
     public function update(User $user, DataDiri $dataDiri): bool
     {
-        return in_array($user->role, ['admin']);
+        return in_array($user->role, ['admin', 'staff_sdm']);
     }
 
     public function delete(User $user, DataDiri $dataDiri): bool
     {
-        return in_array($user->role, ['admin']);
+        return in_array($user->role, ['admin', 'staff_sdm']);
     }
 
     public function deleteAny(User $user): bool
     {
-        return in_array($user->role, ['admin']);
+        return in_array($user->role, ['admin', 'staff_sdm']);
     }
 }
