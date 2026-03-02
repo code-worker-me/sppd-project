@@ -152,6 +152,7 @@ class DataDiriResource extends Resource
                 //
             ])
             ->actions([
+                EditAction::make(),
                 ViewAction::make(),
                 DeleteAction::make()
                     ->label('Hapus')

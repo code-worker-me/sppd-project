@@ -20,6 +20,8 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -231,6 +233,9 @@ class DataPerjalananResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->label('Lihat'),
+                DeleteAction::make()
+                    ->label('Hapus'),
+                EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

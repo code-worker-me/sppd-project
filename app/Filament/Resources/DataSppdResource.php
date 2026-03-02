@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DataSppdResource\Pages;
 use App\Models\DataSppd;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -16,12 +17,15 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 
 class DataSppdResource extends Resource
 {
@@ -105,6 +109,19 @@ class DataSppdResource extends Resource
                             ->placeholder('27-01-2026')
                             ->required(),
                     ])->columns(2),
+
+                Section::make('Upload Surat Tugas')
+                    ->schema([
+                        FileUpload::make('file_st')
+                            ->label('File Surat Tugas')
+                            ->multiple(true)
+                            ->disk('public')
+                            ->directory('lampiran-sppd')
+                            ->reorderable(true)
+                            ->openable(true)
+                            ->downloadable(true)
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 
@@ -136,10 +153,10 @@ class DataSppdResource extends Resource
                     ->searchable()
                     ->badge()
                     ->icon(fn (string $state): string => match ($state) {
-                                'darat' => 'fas-bus',
-                                'udara' => 'fas-plane',
-                                'laut' => 'fas-ship',
-                            })
+                        'darat' => 'fas-bus',
+                        'udara' => 'fas-plane',
+                        'laut' => 'fas-ship',
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'darat' => 'gray',
                         'udara' => 'success',
@@ -180,6 +197,9 @@ class DataSppdResource extends Resource
             ->actions([
                 ViewAction::make()
                     ->label('Lihat'),
+                EditAction::make(),
+                DeleteAction::make()
+                    ->label('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -238,7 +258,7 @@ class DataSppdResource extends Resource
                             ->label('Durasi Perjalanan')
                             ->weight('bold')
                             ->icon('heroicon-s-clock')
-                            ->prefix("hari: ")
+                            ->prefix('hari: ')
                             ->color('secondary'),
 
                         TextEntry::make('angkutan')
@@ -261,6 +281,46 @@ class DataSppdResource extends Resource
                             ->label('Uraian Perjalanan')
                             ->columnSpanFull(),
                     ])->columns(2),
+
+                InfolistSection::make('File Surat Tugas')
+                    ->schema([
+                        TextEntry::make('file_st')
+                            ->label('File Surat Tugas')
+                            ->html()
+                            ->formatStateUsing(function ($state) {
+                                if (empty($state)) {
+                                    return '<span class="text-gray-500">Belum ada file surat tugas yang diunggah.</span>';
+                                }
+
+                                $files = $state;
+                                if (is_string($state)) {
+                                    $decoded = json_decode($state, true);
+                                    $files = is_array($decoded) ? $decoded : [$state];
+                                }
+
+                                // 3. Render HTML sebagai Link
+                                // flex-col dan gap-2 akan membuat link tersusun rapi ke bawah jika file lebih dari satu
+                                $html = '<div class="flex flex-col gap-2">';
+
+                                foreach ($files as $index => $file) {
+                                    $url = Storage::disk('public')->url($file);
+                                    // $nomorUrut = $index + 1;
+                                    $nomorUrut = $file;
+
+                                    // Membuat link dengan icon external-link menggunakan Tailwind CSS
+                                    $html .= '<a href="'.$url.'" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-primary-600 hover:text-primary-800 hover:underline font-medium transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        Buka '.$nomorUrut.' (PDF)
+                      </a>';
+                                }
+
+                                $html .= '</div>';
+
+                                return $html;
+                            }),
+                    ]),
             ]);
     }
 
