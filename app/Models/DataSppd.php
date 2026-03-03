@@ -16,13 +16,11 @@ class DataSppd extends Model
         'angkutan',
         'tg_berangkat',
         'tg_pulang',
-        'file_st',
     ];
 
     protected function casts(): array
     {
         return [
-            'file_st' => 'array',
             'tg_berangkat' => 'date',
             'tg_pulang' => 'date',
             'created_at' => 'datetime',
@@ -33,6 +31,11 @@ class DataSppd extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function lampiran()
+    {
+        return $this->hasOne(Lampiran::class, 'sppd_id');
     }
 
     public function perjalanan()
