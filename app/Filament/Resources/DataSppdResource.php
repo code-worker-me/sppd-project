@@ -12,6 +12,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Grid;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section as InfolistSection;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -33,7 +34,7 @@ class DataSppdResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationLabel = 'SPPD';
+    protected static ?string $navigationLabel = 'SPPD (SDM)';
 
     protected static ?string $modelLabel = 'SPPD';
 
@@ -109,6 +110,48 @@ class DataSppdResource extends Resource
                             ->placeholder('27-01-2026')
                             ->required(),
                     ])->columns(2),
+
+                Section::make('Lampiran Dokumen SPPD')
+                    ->relationship('lampiran')
+                    ->schema([
+                        FileUpload::make('laporan_perjalanan')
+                            ->label('Laporan Perjalanan')
+                            ->multiple(true)
+                            ->disk('public')
+                            ->directory('lampiran-perjalanan')
+                            ->reorderable(true)
+                            ->openable(true)
+                            ->downloadable(true),
+
+                        FileUpload::make('foto_kegiatan')
+                            ->label('Foto Kegiatan')
+                            ->multiple(true)
+                            ->disk('public')
+                            ->directory('lampiran-kegiatan')
+                            ->reorderable(true)
+                            ->openable(true)
+                            ->downloadable(true),
+
+                        FileUpload::make('blanko_sppd')
+                            ->label('Blanko SPPD')
+                            ->multiple(true)
+                            ->disk('public')
+                            ->directory('lampiran-blanko')
+                            ->reorderable(true)
+                            ->openable(true)
+                            ->downloadable(true),
+
+                        FileUpload::make('surat_tugas')
+                            ->label('Surat Tugas')
+                            ->multiple(true)
+                            ->disk('public')
+                            ->directory('lampiran-st')
+                            ->reorderable(true)
+                            ->openable(true)
+                            ->downloadable(true),
+                    ])
+                    ->columns(2)
+                    ->collapsed(true),
             ]);
     }
 
@@ -268,6 +311,80 @@ class DataSppdResource extends Resource
                             ->label('Uraian Perjalanan')
                             ->columnSpanFull(),
                     ])->columns(2),
+
+                InfolistSection::make('Lampiran Dokumen SPPD')
+                    ->description('Daftar file dan dokumentasi perjalanan dinas.')
+                    ->schema([
+                        ImageEntry::make('lampiran.foto_kegiatan')
+                            ->label('Foto Kegiatan')
+                            ->disk('public')
+                            ->stacked(true)
+                            ->extraImgAttributes(['style' => 'border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);']),
+
+                        TextEntry::make('lampiran.laporan_perjalanan')
+                            ->label('Laporan Perjalanan')
+                            ->html()
+                            ->formatStateUsing(function ($state) {
+                                if (empty($state)) {
+                                    return '<span class="text-gray-500">- Belum ada file -</span>';
+                                }
+
+                                $files = is_string($state) ? (json_decode($state, true) ?: [$state]) : $state;
+                                $html = '<div class="flex flex-col gap-2">';
+                                foreach ($files as $index => $file) {
+                                    $url = Storage::disk('public')->url($file);
+                                    $html .= '<a href="'.$url.'" target="_blank" class="inline-flex items-center text-primary-600 hover:text-primary-800 hover:underline font-medium">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                Laporan '.($index + 1).'
+                              </a>';
+                                }
+
+                                return $html.'</div>';
+                            }),
+
+                        TextEntry::make('lampiran.blanko_sppd')
+                            ->label('Blanko SPPD')
+                            ->html()
+                            ->formatStateUsing(function ($state) {
+                                if (empty($state)) {
+                                    return '<span class="text-gray-500">- Belum ada file -</span>';
+                                }
+
+                                $files = is_string($state) ? (json_decode($state, true) ?: [$state]) : $state;
+                                $html = '<div class="flex flex-col gap-2">';
+                                foreach ($files as $index => $file) {
+                                    $url = Storage::disk('public')->url($file);
+                                    $html .= '<a href="'.$url.'" target="_blank" class="inline-flex items-center text-primary-600 hover:text-primary-800 hover:underline font-medium">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                                Blanko '.($index + 1).'
+                              </a>';
+                                }
+
+                                return $html.'</div>';
+                            }),
+
+                        TextEntry::make('lampiran.surat_tugas')
+                            ->label('Surat Tugas')
+                            ->html()
+                            ->formatStateUsing(function ($state) {
+                                if (empty($state)) {
+                                    return '<span class="text-gray-500">- Belum ada file -</span>';
+                                }
+
+                                $files = is_string($state) ? (json_decode($state, true) ?: [$state]) : $state;
+                                $html = '<div class="flex flex-col gap-2">';
+                                foreach ($files as $index => $file) {
+                                    $url = Storage::disk('public')->url($file);
+                                    $html .= '<a href="'.$url.'" target="_blank" class="inline-flex items-center text-primary-600 hover:text-primary-800 hover:underline font-medium">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                Surat Tugas '.($index + 1).'
+                              </a>';
+                                }
+
+                                return $html.'</div>';
+                            }),
+                    ])
+                    ->columns(2),
             ]);
     }
 

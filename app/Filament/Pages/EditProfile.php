@@ -4,7 +4,6 @@ namespace App\Filament\Pages;
 
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
 use Illuminate\Contracts\Support\Htmlable;
@@ -48,14 +47,15 @@ class EditProfile extends BaseEditProfile
                     ->directory('avatars')
                     ->disk('public'),
 
-                Section::make('Informasi Akun')
-                    ->description('Perbarui nama, email, dan kata sandi Anda.')
-                    ->schema([
-                        $this->getNameFormComponent(),
-                        $this->getEmailFormComponent(),
-                        $this->getPasswordFormComponent(),
-                        $this->getPasswordConfirmationFormComponent(),
-                    ]),
+                $this->getNameFormComponent()
+                    ->label('Nama'),
+                $this->getEmailFormComponent()
+                    ->label('Email'),
+                $this->getPasswordFormComponent()
+                    ->label('Password Baru'),
+                $this->getPasswordConfirmationFormComponent()
+                    ->label('Konfirmasi Password Baru'),
+
             ]);
     }
 }
