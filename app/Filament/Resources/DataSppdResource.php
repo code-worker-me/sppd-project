@@ -110,10 +110,10 @@ class DataSppdResource extends Resource
                             ->required(),
                     ])->columns(2),
 
-                Section::make('Upload Surat Tugas')
+                Section::make('Upload File')
                     ->schema([
                         FileUpload::make('file_st')
-                            ->label('File Surat Tugas')
+                            ->label('File Pendukung Surat Tugas dan lainnya')
                             ->multiple(true)
                             ->disk('public')
                             ->directory('lampiran-sppd')
