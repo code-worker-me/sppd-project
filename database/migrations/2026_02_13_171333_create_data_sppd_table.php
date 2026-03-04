@@ -20,7 +20,6 @@ return new class extends Migration
             $table->text('angkutan')->nullable();
             $table->date('tg_berangkat')->nullable();
             $table->date('tg_pulang')->nullable();
-            $table->json('file_st')->nullable();
             $table->timestamps();
         });
     }

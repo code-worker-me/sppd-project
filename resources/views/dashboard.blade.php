@@ -1,3 +1,5 @@
+@use(App\Helpers\LampiranHelper)
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -125,21 +127,21 @@
                     </div>
                 </div>
             </div>
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
                 <div class="p-6">
                     <!-- Header Section 2 -->
                     <div class="mb-6 border-b border-gray-200 pb-4">
-                        <h2 class="text-2xl font-bold text-gray-900">Informasi Perjalanan Dinas</h2>
-                        <p class="text-sm text-gray-600 mt-1">Detail surat tugas dan perjalanan dinas</p>
+                        <h2 class="text-2xl font-bold text-gray-900">Informasi SPPD</h2>
+                        <p class="text-sm text-gray-600 mt-1">Detail SPPD</p>
                     </div>
 
-                    @if (!$perjalanan || !$sppd)
+                    @if (!$sppd)
                         <div class="bg-white overflow-hidden">
                             <div class="p-12 text-center mb-4">
-                                <h3 class="mt-4 text-lg font-medium text-gray-900">Belum Ada Data</h3>
+                                <h3 class="mt-4 text-lg font-medium text-gray-900">Belum Ada Data SPPD</h3>
                                 <p class="mt-2 text-sm text-gray-500">
-                                    Anda belum memiliki data perjalanan dinas. Silakan hubungi administrator untuk
-                                    menambahkan data.
+                                    Silakan hubungi administrator untuk menambahkan data.
                                 </p>
                             </div>
                         </div>
@@ -259,15 +261,14 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg mb-4">
                 <div class="p-6">
                     <!-- Section Header -->
                     <div class="mb-6 pb-4 border-b-2 border-gray-100">
                         <h2 class="text-xl font-bold text-gray-900 flex items-center">
                             <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                @svg('solar-money-bag-bold-duotone')
                             </svg>
                             Detail Biaya Perjalanan Dinas
                         </h2>
@@ -481,6 +482,212 @@
                             </table>
                         </div>
                     @endif
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
+                <div class="p-6">
+
+                    {{-- Section Header --}}
+                    <div class="mb-6 pb-4 border-b-2 border-gray-100">
+                        <h2 class="text-xl font-bold text-gray-900 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            Lampiran Perjalanan Dinas
+                        </h2>
+                        <p class="text-sm text-gray-500 mt-1 ml-8">Lampiran foto dan dokumen perjalanan dinas.</p>
+                    </div>
+
+                    @if (!$sections)
+                        <div class="p-12 text-center">
+                            <div
+                                class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900">Belum Ada Data</h3>
+                            <p class="mt-2 text-sm text-gray-500">
+                                Anda belum memiliki data perjalanan dinas.<br>
+                                Silakan hubungi administrator untuk menambahkan data.
+                            </p>
+                        </div>
+                    @else
+                        <div class="space-y-6">
+                            @foreach ($sections as $section)
+                                <div class="border border-gray-200 rounded-xl overflow-hidden">
+
+                                    {{-- Card Header --}}
+                                    <div
+                                        class="flex items-center justify-between px-5 py-3.5
+                                    {{ $section['color']['bg'] }} border-b {{ $section['color']['border'] }}">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-8 h-8 rounded-lg bg-white/70 flex items-center justify-center shadow-sm">
+                                                <svg class="w-4 h-4 {{ $section['color']['icon'] }}" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="{{ $section['icon'] }}" />
+                                                </svg>
+                                            </div>
+                                            <span
+                                                class="font-semibold text-gray-800 text-sm">{{ $section['label'] }}</span>
+                                        </div>
+                                        <span
+                                            class="text-xs font-bold px-2.5 py-1 rounded-full {{ $section['color']['badge'] }}">
+                                            {{ $section['count'] }} {{ $section['count'] === 1 ? 'file' : 'files' }}
+                                        </span>
+                                    </div>
+
+                                    {{-- Card Body --}}
+                                    <div class="p-4">
+                                        @if ($section['count'] === 0)
+                                            <div
+                                                class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-lg text-gray-400">
+                                                <svg class="w-5 h-5 flex-shrink-0" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                                </svg>
+                                                <span class="text-sm">Tidak ada lampiran.</span>
+                                            </div>
+                                        @else
+                                            {{-- ── IMAGES ─────────────────────────────────── --}}
+                                            @if (count($section['images']) > 0)
+                                                <div
+                                                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3
+                                                {{ count($section['pdfs']) > 0 ? 'mb-4' : '' }}">
+                                                    @foreach ($section['images'] as $img)
+                                                        <a href="{{ LampiranHelper::url($img) }}" target="_blank"
+                                                            class="group relative block aspect-square rounded-xl overflow-hidden
+                                                      border-2 border-gray-100 hover:border-gray-300
+                                                      transition-all shadow-sm hover:shadow-md">
+
+                                                            <img src="{{ LampiranHelper::url($img) }}"
+                                                                alt="{{ LampiranHelper::filename($img) }}"
+                                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+
+                                                            {{-- Hover overlay --}}
+                                                            <div
+                                                                class="absolute inset-0 bg-black/0 group-hover:bg-black/30
+                                                            transition-all duration-200 flex items-center justify-center">
+                                                                <div
+                                                                    class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                    <div class="bg-white/90 rounded-full p-2 shadow">
+                                                                        <svg class="w-5 h-5 text-gray-800"
+                                                                            fill="none" stroke="currentColor"
+                                                                            viewBox="0 0 24 24">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                stroke-width="2"
+                                                                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                        </svg>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- Filename --}}
+                                                            <div
+                                                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent
+                                                            px-2 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                <p class="text-white text-[10px] truncate">
+                                                                    {{ LampiranHelper::filename($img) }}
+                                                                </p>
+                                                            </div>
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
+                                            {{-- ── PDFs ────────────────────────────────────── --}}
+                                            @if (count($section['pdfs']) > 0)
+                                                <div class="space-y-4">
+                                                    @foreach ($section['pdfs'] as $pdf)
+                                                        <div class="border border-gray-200 rounded-xl overflow-hidden">
+
+                                                            {{-- PDF Toolbar --}}
+                                                            <div
+                                                                class="flex items-center justify-between px-4 py-2.5 bg-gray-50 border-b border-gray-200">
+                                                                <div class="flex items-center gap-2.5">
+                                                                    <div
+                                                                        class="w-7 h-7 rounded-md bg-red-100 flex items-center justify-center flex-shrink-0">
+                                                                        <svg class="w-4 h-4 text-red-600"
+                                                                            fill="currentColor" viewBox="0 0 24 24">
+                                                                            <path
+                                                                                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5z" />
+                                                                        </svg>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p
+                                                                            class="text-sm font-medium text-gray-700 truncate max-w-xs">
+                                                                            {{ LampiranHelper::filename($pdf) }}
+                                                                        </p>
+                                                                        <p class="text-xs text-gray-400">PDF Document
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="flex items-center gap-2">
+                                                                    <a href="{{ LampiranHelper::url($pdf) }}"
+                                                                        target="_blank"
+                                                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium
+                                                                  text-gray-600 bg-white border border-gray-300 rounded-lg
+                                                                  hover:bg-gray-50 transition-all">
+                                                                        <svg class="w-3.5 h-3.5" fill="none"
+                                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                stroke-width="2"
+                                                                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                        </svg>
+                                                                        Buka Tab Baru
+                                                                    </a>
+                                                                    <a href="{{ LampiranHelper::url($pdf) }}"
+                                                                        download="{{ LampiranHelper::filename($pdf) }}"
+                                                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium
+                                                                  text-white {{ $section['color']['btn'] }} rounded-lg transition-all">
+                                                                        <svg class="w-3.5 h-3.5" fill="none"
+                                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                stroke-width="2"
+                                                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                                        </svg>
+                                                                        Unduh
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- iFrame --}}
+                                                            <iframe src="{{ LampiranHelper::url($pdf) }}"
+                                                                class="w-full" style="height: 500px; border: none;"
+                                                                title="{{ LampiranHelper::filename($pdf) }}"
+                                                                loading="lazy">
+                                                                <p class="p-4 text-sm text-gray-500 text-center">
+                                                                    Browser Anda tidak mendukung tampilan PDF.
+                                                                    <a href="{{ LampiranHelper::url($pdf) }}"
+                                                                        class="text-blue-600 underline">
+                                                                        Klik di sini untuk membuka.
+                                                                    </a>
+                                                                </p>
+                                                            </iframe>
+
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
                 </div>
             </div>
         </div>

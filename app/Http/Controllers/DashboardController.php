@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SppdExport;
+use App\Helpers\LampiranHelper;
 use App\Models\DataPerjalanan;
+use App\Models\DataSppd;
+use App\Models\Lampiran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -12,37 +15,28 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
+        $user = Auth::user()->load('dataDiri');
 
-        $perjalanan = DataPerjalanan::with(['sppd.user.dataDiri'])
-            ->whereHas('sppd', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
+        $sppd = DataSppd::where('user_id', $user->id)
             ->latest('created_at')
             ->first();
 
-        if (! $perjalanan) {
-            return view('dashboard', [
-                'user' => $user,
-                'sppd' => null,
-                'perjalanan' => null,
-                'message' => 'Anda belum memiliki data perjalanan dinas.',
-                'messageType' => 'info',
-            ]);
-        }
-
-        $sppd = $perjalanan->sppd;
         if (! $sppd) {
             return view('dashboard', [
                 'user' => $user,
                 'sppd' => null,
                 'perjalanan' => null,
-                'message' => 'Data SPPD tidak ditemukan. Silakan hubungi administrator.',
-                'messageType' => 'error',
+                'message' => 'Anda belum memiliki data SPPD atau riwayat perjalanan dinas.',
+                'messageType' => 'info',
             ]);
         }
 
-        return view('dashboard', compact('user', 'sppd', 'perjalanan'));
+        $perjalanan = DataPerjalanan::where('sppd_id', $sppd->id)->first();
+        $lampiran = Lampiran::where('sppd_id', $sppd->id)->first();
+
+        $sections = LampiranHelper::buildSections($lampiran);
+
+        return view('dashboard', compact('user', 'sppd', 'perjalanan', 'sections'));
     }
 
     public function history()
@@ -87,10 +81,10 @@ class DashboardController extends Controller
         $year = $request->get('year', date('Y'));
         $month = $request->get('month', null);
 
-        $filename = 'SPPD_' . strtoupper(config('app.name', 'TVRI')) . '_' . $year;
+        $filename = 'SPPD_'.strtoupper(config('app.name', 'TVRI')).'_'.$year;
 
         if ($month) {
-            $filename .= '_' . str_pad($month, 2, '0', STR_PAD_LEFT);
+            $filename .= '_'.str_pad($month, 2, '0', STR_PAD_LEFT);
         }
 
         $filename .= '.xlsx';

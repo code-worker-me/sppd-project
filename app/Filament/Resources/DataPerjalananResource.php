@@ -32,7 +32,7 @@ class DataPerjalananResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-map';
 
-    protected static ?string $navigationLabel = 'Perjalanan';
+    protected static ?string $navigationLabel = 'Perjalanan (Keuangan)';
 
     protected static ?string $modelLabel = 'Perjalanan';
 
