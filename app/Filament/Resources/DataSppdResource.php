@@ -23,7 +23,6 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
@@ -50,21 +49,21 @@ class DataSppdResource extends Resource
             ->schema([
                 Section::make('SPPD Information')
                     ->schema([
-                        Select::make('user_id')
-                            ->label('Pegawai/Staff')
-                            ->relationship(
-                                name: 'user',
-                                titleAttribute: 'name',
-                                modifyQueryUsing: fn ($query) => $query->has('dataDiri')
-                            )
-                            ->searchable()
+                        Select::make('jenis_st')
+                            ->label('Kategori Surat Tugas')
+                            ->options([
+                                'umum' => 'DIPA Umum',
+                                'pu' => 'DIPA Pekerjaan Umum (PU)',
+                            ])
+                            ->required(),
+
+                        Select::make('users')
+                            ->label('Pegawai yang Ditugaskan')
+                            ->relationship(name: 'users', titleAttribute: 'name')
+                            ->multiple()
                             ->preload()
-                            ->required()
-                            ->native(false)
-                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->name.
-                                ($record->dataDiri?->nip ? ' - NIP: '.$record->dataDiri->nip : '')
-                            )
-                            ->helperText('Hanya pegawai yang terdaftar dapat dipilih'),
+                            ->searchable()
+                            ->required(),
 
                         TextInput::make('st')
                             ->label('Nomor Surat Tugas')
@@ -164,9 +163,10 @@ class DataSppdResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                TextColumn::make('user.name')
+                TextColumn::make('users.name')
                     ->label('Pegawai')
-                    ->description(fn (DataSppd $record): string => $record->user?->dataDiri?->nip ?? '-')
+                    ->listWithLineBreaks()
+                    ->limitList(1)
                     ->searchable(),
 
                 TextColumn::make('kota')
@@ -194,13 +194,6 @@ class DataSppdResource extends Resource
                     }),
             ])
             ->filters([
-                SelectFilter::make('user_id')
-                    ->label('User')
-                    ->relationship('user', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->native(false),
-
                 Filter::make('tg_berangkat')
                     ->form([
                         DatePicker::make('from')
@@ -253,7 +246,7 @@ class DataSppdResource extends Resource
                             ->copyable()
                             ->icon('heroicon-o-document-text'),
 
-                        TextEntry::make('user.name')
+                        TextEntry::make('users.name')
                             ->label('Nama Pegawai')
                             ->color('secondary')
                             ->icon('heroicon-o-user'),
@@ -264,7 +257,7 @@ class DataSppdResource extends Resource
                             ->icon('heroicon-o-map-pin')
                             ->color('warning'),
 
-                        TextEntry::make('user.dataDiri.unit_kerja')
+                        TextEntry::make('users.dataDiri.unit_kerja')
                             ->label('Unit Kerja')
                             ->color('secondary')
                             ->icon('heroicon-s-briefcase')

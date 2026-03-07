@@ -9,7 +9,7 @@ class DataSppd extends Model
     protected $table = 'data_sppd';
 
     protected $fillable = [
-        'user_id',
+        'jenis_st',
         'st',
         'kota',
         'deskripsi',
@@ -28,9 +28,9 @@ class DataSppd extends Model
         ];
     }
 
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class, 'data_sppd_user', 'data_sppd_id', 'user_id');
     }
 
     public function lampiran()
