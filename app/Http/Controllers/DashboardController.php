@@ -47,14 +47,14 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         $perjalanan = DataPerjalanan::with(['sppd'])
-            ->whereHas('sppd', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
+            ->whereHas('sppd.users', function ($query) use ($user) {
+                $query->where('users.id', $user->id);
             })
             ->latest('created_at')
             ->paginate(10);
 
-        $totalBiaya = DataPerjalanan::whereHas('sppd', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
+        $totalBiaya = DataPerjalanan::whereHas('sppd.users', function ($query) use ($user) {
+            $query->where('users.id', $user->id);
         })->sum('jumlah_sppd');
 
         return view('dashboard.history', compact('user', 'perjalanan', 'totalBiaya'));
