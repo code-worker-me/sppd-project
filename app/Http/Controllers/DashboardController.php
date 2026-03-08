@@ -15,11 +15,14 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $user = Auth::user()->load('dataDiri');
+        $user = Auth::user()->load([
+            'dataDiri',
+            'sppds' => function ($query) {
+                $query->latest('created_at')->limit(1);
+            }
+        ]);
 
-        $sppd = DataSppd::where('user_id', $user->id)
-            ->latest('created_at')
-            ->first();
+        $sppd = $user->sppds->first();
 
         if (! $sppd) {
             return view('dashboard', [
