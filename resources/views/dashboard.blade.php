@@ -501,7 +501,7 @@
                         <p class="text-sm text-gray-500 mt-1 ml-8">Lampiran foto dan dokumen perjalanan dinas.</p>
                     </div>
 
-                    @if (!$sections)
+                    @if (!$sppd)
                         <div class="p-12 text-center">
                             <div
                                 class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">

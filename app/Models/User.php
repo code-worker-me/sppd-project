@@ -70,7 +70,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function sppds()
     {
-        return $this->hasMany(DataSppd::class);
+        return $this->belongsToMany(DataSppd::class, 'data_sppd_user', 'user_id', 'data_sppd_id');
     }
 
     public function isAdmin(): bool

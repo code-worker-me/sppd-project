@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('data_sppd', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('st')->nullable();
             $table->string('kota')->nullable();
             $table->text('deskripsi')->nullable();
             $table->text('angkutan')->nullable();
             $table->date('tg_berangkat')->nullable();
             $table->date('tg_pulang')->nullable();
+            $table->enum('jenis_st', ['umum', 'pu'])->default('umum');
             $table->timestamps();
         });
     }
