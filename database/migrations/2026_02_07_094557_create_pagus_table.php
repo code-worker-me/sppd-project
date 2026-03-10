@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pagus', function (Blueprint $table) {
             $table->id();
-            $table->year('tahun_anggaran');
+            $table->string('tahun_anggaran');
             $table->decimal('saldo_umum', 15, 2)->default(0);
             $table->decimal('saldo_pu', 15, 2)->default(0);
             $table->timestamps();

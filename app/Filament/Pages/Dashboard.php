@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Exports\SppdExport;
 use App\Filament\Widgets\DataPegawai;
 use App\Filament\Widgets\DataPerjalanan;
+use App\Filament\Widgets\PaguSaldoOverview;
 use App\Filament\Widgets\PerjalananOverview;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
@@ -91,6 +92,7 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
+            PaguSaldoOverview::class,
             DataPerjalanan::class,
             PerjalananOverview::class,
             DataPegawai::class,

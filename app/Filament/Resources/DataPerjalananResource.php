@@ -55,7 +55,7 @@ class DataPerjalananResource extends Resource
                                 titleAttribute: 'st',
                                 modifyQueryUsing: fn ($query) => $query
                                     ->doesntHave('perjalanan') // Hanya SPPD yang belum punya perjalanan
-                                    ->with('user')
+                                    ->with('users')
                                     ->orderBy('created_at', 'desc')
                             )
                             ->searchable(['st', 'kota'])
@@ -64,8 +64,6 @@ class DataPerjalananResource extends Resource
                             ->native(false)
                             ->placeholder('Pilih nomor surat tugas')
                             ->live()
-                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->st.' - '.$record->user->full_name.' ('.$record->kota.')'
-                            )
                             ->helperText('Hanya surat tugas yang belum memiliki data perjalanan'),
 
                         ComponentsGrid::make(2)

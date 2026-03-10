@@ -20,7 +20,7 @@ class PerjalananOverview extends BaseWidget
         return $table
             ->query(
                 DataPerjalanan::query()
-                    ->with(['sppd', 'sppd.user'])
+                    ->with(['sppd', 'sppd.users'])
                     ->whereHas('sppd')
             )
             ->columns([

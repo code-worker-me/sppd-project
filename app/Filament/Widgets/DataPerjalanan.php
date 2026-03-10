@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\DataPerjalanan as ModelsDataPerjalanan;
 use App\Models\DataSppd;
+use App\Models\Pagu;
 use App\Models\User;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
