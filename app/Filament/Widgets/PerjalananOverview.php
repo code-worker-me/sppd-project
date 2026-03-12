@@ -26,8 +26,19 @@ class PerjalananOverview extends BaseWidget
             ->columns([
                 TextColumn::make('sppd.st')
                     ->label('Surat Tugas')
-                    ->searchable()
-                    ->description(fn ($record): string => $record->sppd?->user?->name ?? '-'),
+                    ->searchable(),
+
+                TextColumn::make('sppd.kategori')
+                    ->label('Kategori')
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'pu'    => 'Pengembangan Usaha',
+                        default => 'Umum',
+                    })
+                    ->color(fn (?string $state): string => match ($state) {
+                        'pu'    => 'info',
+                        default => 'success',
+                    }),
 
                 TextColumn::make('sppd.kota')
                     ->label('Kota/Tujuan')

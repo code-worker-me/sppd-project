@@ -208,8 +208,7 @@ class DataPerjalananResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('sppd.users.name')
-                    ->label('Pegawai')
-                    ->description(fn ($record): string => $record->sppd?->user?->dataDiri?->nip ?? '-'),
+                    ->label('Pegawai'),
 
                 TextColumn::make('sppd.kota')
                     ->label('Kota/Tujuan')
