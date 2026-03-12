@@ -11,6 +11,7 @@ class DataSppd extends Model
     protected $fillable = [
         'jenis_st',
         'st',
+        'kategori',
         'kota',
         'deskripsi',
         'angkutan',

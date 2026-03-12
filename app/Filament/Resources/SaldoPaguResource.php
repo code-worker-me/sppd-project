@@ -18,11 +18,11 @@ class SaldoPaguResource extends Resource
 
     protected static ?string $navigationIcon = 'far-money-bill-alt';
 
-    protected static ?string $navigationLabel = 'Saldo Pagu';
+    protected static ?string $navigationLabel = 'Input Pagu';
 
     protected static ?string $modelLabel = 'Pagu';
 
-    protected static ?string $pluralModelLabel = 'Saldo SPPD';
+    protected static ?string $pluralModelLabel = ' Input Pagu';
 
     protected static ?string $navigationGroup = 'SPPD Management';
 
@@ -32,17 +32,17 @@ class SaldoPaguResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Saldo Pagu')
+                Section::make('Input Pagu')
                     ->schema([
                         TextInput::make('saldo_umum')
-                            ->label('Saldo Umum')
+                            ->label('Pagu Umum')
                             ->numeric()
                             ->prefix('Rp. ')
                             ->default(0)
                             ->required(),
 
                         TextInput::make('saldo_pu')
-                            ->label('Saldo PU')
+                            ->label('Pagu Pengembangan Usaha (PU)')
                             ->required()
                             ->numeric()
                             ->prefix('Rp. ')
@@ -64,10 +64,13 @@ class SaldoPaguResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('saldo_umum')
+                    ->label('Pagu Umum')        
                     ->money('IDR'),
                 TextColumn::make('saldo_pu')
+                    ->label('Pagu Pengembangan Usaha (PU)')  
                     ->money('IDR'),
                 TextColumn::make('tahun_anggaran')
+                    ->label('Tahun Anggaran')
             ])
             ->filters([
                 //
