@@ -20,13 +20,13 @@ class PaguSaldoOverview extends BaseWidget
         $saldoPu = $pagu ? $pagu->saldo_pu : 0;
 
         return [
-            Stat::make('Total Saldo Umum', 'Rp ' . number_format($saldoUmum, 0, ',', '.'))
+            Stat::make('Pagu Umum', 'Rp ' . number_format($saldoUmum, 0, ',', '.'))
                 ->description('Anggaran Tahun ' . $tahunIni)
                 ->descriptionIcon('heroicon-m-wallet')
                 ->color('success')
                 ->chart([7, 2, 10, 3, 15, 4, 17]),
 
-            Stat::make('Total Saldo Pengembangan Usaha (PU', 'Rp ' . number_format($saldoPu, 0, ',', '.'))
+            Stat::make('Pagu Pengembangan Usaha (PU)', 'Rp ' . number_format($saldoPu, 0, ',', '.'))
                 ->description('Anggaran Tahun ' . $tahunIni)
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('info')
