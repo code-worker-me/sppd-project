@@ -64,15 +64,18 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $perjalanan = DataPerjalanan::with(['sppd.user.dataDiri'])
-            ->whereHas('sppd', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->findOrFail($id);
 
-        if ($perjalanan->sppd->user_id !== $user->id) {
-            abort(403, 'Unauthorized access');
-        }
+        $perjalanan = DataPerjalanan::with(['sppd.users.dataDiri'])
+            ->whereHas('sppd.users', function ($query) use ($user) {
+                $query->where('users.id', $user->id);
+        })
+        ->findOrFail($id);
+
+    
+    $hasAccess = $perjalanan->sppd->users->contains('id', $user->id);
+    if (!$hasAccess) {
+        abort(403, 'Unauthorized access');
+    }
 
         $sppd = $perjalanan->sppd;
 

@@ -52,8 +52,8 @@ class DataSppdResource extends Resource
                         Select::make('jenis_st')
                             ->label('Kategori Surat Tugas')
                             ->options([
-                                'umum' => 'DIPA Umum',
-                                'pu' => 'DIPA Pekerjaan Umum (PU)',
+                                'umum' => 'Umum',
+                                'pu' => 'Pengembangan Usaha (PU)',
                             ])
                             ->required(),
 
