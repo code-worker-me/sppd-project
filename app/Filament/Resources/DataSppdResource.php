@@ -23,6 +23,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
@@ -53,7 +54,7 @@ class DataSppdResource extends Resource
                             ->label('Kategori Surat Tugas')
                             ->options([
                                 'umum' => 'Umum',
-                                'pu' => 'Pengembangan Usaha (PU)',
+                                'pu'   => 'Pengembangan Usaha (PU)',
                             ])
                             ->required(),
 
@@ -65,11 +66,20 @@ class DataSppdResource extends Resource
                             ->searchable()
                             ->required(),
 
+                        Select::make('kategori')
+                            ->label('Kategori Anggaran')
+                            ->options([
+                                'umum' => 'Umum',
+                                'pu'   => 'Pengembangan Usaha (PU)',
+                            ])
+                            ->required()
+                            ->default('umum'),
+
                         TextInput::make('st')
                             ->label('Nomor Surat Tugas')
                             ->required()
                             ->placeholder('019')
-                            ->unique()
+                            ->unique(ignoreRecord: true)
                             ->maxLength(255),
 
                         TextInput::make('kota')
@@ -84,7 +94,7 @@ class DataSppdResource extends Resource
                             ->options([
                                 'darat' => 'Darat',
                                 'udara' => 'Udara',
-                                'laut' => 'Laut',
+                                'laut'  => 'Laut',
                             ])
                             ->default('darat'),
 
@@ -109,7 +119,6 @@ class DataSppdResource extends Resource
                             ->placeholder('27-01-2026')
                             ->required(),
                     ])->columns(2),
-
 
                 Section::make('Lampiran Dokumen SPPD')
                     ->relationship('lampiran')
@@ -170,6 +179,18 @@ class DataSppdResource extends Resource
                     ->limitList(1)
                     ->searchable(),
 
+                TextColumn::make('kategori')
+                    ->label('Kategori')
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'pu'    => 'Pengembangan Usaha',
+                        default => 'Umum',
+                    })
+                    ->color(fn (?string $state): string => match ($state) {
+                        'pu'    => 'info',
+                        default => 'success',
+                    }),
+
                 TextColumn::make('kota')
                     ->label('Kota/Tujuan')
                     ->icon('ionicon-pin-sharp')
@@ -186,15 +207,18 @@ class DataSppdResource extends Resource
                     ->icon(fn (string $state): string => match ($state) {
                         'darat' => 'fas-bus',
                         'udara' => 'fas-plane',
-                        'laut' => 'fas-ship',
+                        'laut'  => 'fas-ship',
+                        default => 'fas-bus',
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'darat' => 'gray',
                         'udara' => 'success',
-                        'laut' => 'warning'
+                        'laut'  => 'warning',
+                        default => 'gray',
                     }),
             ])
             ->filters([
+                // ✅ Filter tanggal
                 Filter::make('tg_berangkat')
                     ->form([
                         DatePicker::make('from')
@@ -217,6 +241,14 @@ class DataSppdResource extends Resource
                                 fn (Builder $query, $date): Builder => $query->whereDate('tg_berangkat', '<=', $date),
                             );
                     }),
+
+                // ✅ Filter kategori anggaran — sejajar dengan filter tanggal
+                SelectFilter::make('kategori')
+                    ->label('Kategori Anggaran')
+                    ->options([
+                        'umum' => 'Umum',
+                        'pu'   => 'Pengembangan Usaha (PU)',
+                    ]),
             ])
             ->actions([
                 ViewAction::make()
@@ -252,6 +284,18 @@ class DataSppdResource extends Resource
                             ->color('secondary')
                             ->icon('heroicon-o-user'),
 
+                        TextEntry::make('kategori')
+                            ->label('Kategori Anggaran')
+                            ->badge()
+                            ->formatStateUsing(fn (?string $state): string => match ($state) {
+                                'pu'    => 'Pengembangan Usaha (PU)',
+                                default => 'Umum',
+                            })
+                            ->color(fn (?string $state): string => match ($state) {
+                                'pu'    => 'info',
+                                default => 'success',
+                            }),
+
                         TextEntry::make('kota')
                             ->label('Kota Tujuan')
                             ->weight('bold')
@@ -275,7 +319,6 @@ class DataSppdResource extends Resource
                                     ->label('Tanggal Pulang')
                                     ->date('d F Y')
                                     ->icon('heroicon-s-calendar'),
-
                             ]),
 
                         TextEntry::make('durasi')
@@ -293,12 +336,14 @@ class DataSppdResource extends Resource
                             ->icon(fn (string $state): string => match ($state) {
                                 'darat' => 'fas-bus',
                                 'udara' => 'fas-plane',
-                                'laut' => 'fas-ship',
+                                'laut'  => 'fas-ship',
+                                default => 'fas-bus',
                             })
                             ->color(fn (string $state): string => match ($state) {
                                 'darat' => 'gray',
                                 'udara' => 'success',
-                                'laut' => 'warning'
+                                'laut'  => 'warning',
+                                default => 'gray',
                             }),
 
                         TextEntry::make('deskripsi')
@@ -322,18 +367,16 @@ class DataSppdResource extends Resource
                                 if (empty($state)) {
                                     return '<span class="text-gray-500">- Belum ada file -</span>';
                                 }
-
                                 $files = is_string($state) ? (json_decode($state, true) ?: [$state]) : $state;
-                                $html = '<div class="flex flex-col gap-2">';
+                                $html  = '<div class="flex flex-col gap-2">';
                                 foreach ($files as $index => $file) {
-                                    $url = Storage::disk('public')->url($file);
-                                    $html .= '<a href="'.$url.'" target="_blank" class="inline-flex items-center text-primary-600 hover:text-primary-800 hover:underline font-medium">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                                Laporan '.($index + 1).'
-                              </a>';
+                                    $url   = Storage::disk('public')->url($file);
+                                    $html .= '<a href="' . $url . '" target="_blank" class="inline-flex items-center text-primary-600 hover:text-primary-800 hover:underline font-medium">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                        Laporan ' . ($index + 1) . '
+                                    </a>';
                                 }
-
-                                return $html.'</div>';
+                                return $html . '</div>';
                             }),
 
                         TextEntry::make('lampiran.blanko_sppd')
@@ -343,18 +386,16 @@ class DataSppdResource extends Resource
                                 if (empty($state)) {
                                     return '<span class="text-gray-500">- Belum ada file -</span>';
                                 }
-
                                 $files = is_string($state) ? (json_decode($state, true) ?: [$state]) : $state;
-                                $html = '<div class="flex flex-col gap-2">';
+                                $html  = '<div class="flex flex-col gap-2">';
                                 foreach ($files as $index => $file) {
-                                    $url = Storage::disk('public')->url($file);
-                                    $html .= '<a href="'.$url.'" target="_blank" class="inline-flex items-center text-primary-600 hover:text-primary-800 hover:underline font-medium">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-                                Blanko '.($index + 1).'
-                              </a>';
+                                    $url   = Storage::disk('public')->url($file);
+                                    $html .= '<a href="' . $url . '" target="_blank" class="inline-flex items-center text-primary-600 hover:text-primary-800 hover:underline font-medium">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                                        Blanko ' . ($index + 1) . '
+                                    </a>';
                                 }
-
-                                return $html.'</div>';
+                                return $html . '</div>';
                             }),
 
                         TextEntry::make('lampiran.surat_tugas')
@@ -364,18 +405,16 @@ class DataSppdResource extends Resource
                                 if (empty($state)) {
                                     return '<span class="text-gray-500">- Belum ada file -</span>';
                                 }
-
                                 $files = is_string($state) ? (json_decode($state, true) ?: [$state]) : $state;
-                                $html = '<div class="flex flex-col gap-2">';
+                                $html  = '<div class="flex flex-col gap-2">';
                                 foreach ($files as $index => $file) {
-                                    $url = Storage::disk('public')->url($file);
-                                    $html .= '<a href="'.$url.'" target="_blank" class="inline-flex items-center text-primary-600 hover:text-primary-800 hover:underline font-medium">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                                Surat Tugas '.($index + 1).'
-                              </a>';
+                                    $url   = Storage::disk('public')->url($file);
+                                    $html .= '<a href="' . $url . '" target="_blank" class="inline-flex items-center text-primary-600 hover:text-primary-800 hover:underline font-medium">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                        Surat Tugas ' . ($index + 1) . '
+                                    </a>';
                                 }
-
-                                return $html.'</div>';
+                                return $html . '</div>';
                             }),
                     ])
                     ->columns(2),
@@ -384,18 +423,16 @@ class DataSppdResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDataSppds::route('/'),
+            'index'  => Pages\ListDataSppds::route('/'),
             'create' => Pages\CreateDataSppd::route('/create'),
-            'view' => Pages\ViewDataSppd::route('/{record}'),
-            'edit' => Pages\EditDataSppd::route('/{record}/edit'),
+            'view'   => Pages\ViewDataSppd::route('/{record}'),
+            'edit'   => Pages\EditDataSppd::route('/{record}/edit'),
         ];
     }
 

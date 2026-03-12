@@ -24,7 +24,7 @@ class PaguSaldoOverview extends BaseWidget
                 ->color('success')
                 ->chart([7, 2, 10, 3, 15, 4, 17]),
 
-            Stat::make('Total Saldo Pengembangan Usaha (PU)', 'Rp ' . number_format($saldoPu, 0, ',', '.'))
+            Stat::make('Total Saldo Pengembangan Usaha (PU', 'Rp ' . number_format($saldoPu, 0, ',', '.'))
                 ->description('Anggaran Tahun ' . $tahunIni)
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('info')

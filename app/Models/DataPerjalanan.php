@@ -22,7 +22,7 @@ class DataPerjalanan extends Model
         'saldo_umum',
         'saldo_pengembangan',
         'panjar_kerja',
-        'ketarangan',
+        'keterangan',
         'lampiran'
     ];
 
