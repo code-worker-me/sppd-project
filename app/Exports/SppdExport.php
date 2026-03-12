@@ -100,14 +100,14 @@ class SppdExport implements FromCollection, ShouldAutoSize, WithColumnWidths, Wi
         $saldoUmumBaris = '';
         $saldoPuBaris = '';
 
-        $kategori = $perjalanan->sppd->kategori ? 'pu' : 'umum';
+        $kategori = $perjalanan->sppd->kategori ?? 'umum';
 
         if ($kategori === 'umum') {
             $this->currentSaldoUmum -= $jumlah;
             $saldoUmumBaris = $this->currentSaldoUmum;
         }
 
-        if ($kategori === 'pu') {
+        else {
             $this->currentSaldoPu -= $jumlah;
             $saldoPuBaris = $this->currentSaldoPu;
         }
