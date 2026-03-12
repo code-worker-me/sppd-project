@@ -174,7 +174,7 @@ class SppdExport implements
             $perjalanan->bbm_tol ?? 0,
             $perjalanan->hotel ?? 0,
             $perjalanan->jumlah_sppd ?? 0,
-            '', // Saldo SPPD - bisa dikosongkan atau dihitung
+            '',
             '',
             '-',
             '', // Keterangan
