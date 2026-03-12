@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Exports\SppdExport;
 use App\Helpers\LampiranHelper;
 use App\Models\DataPerjalanan;
-use App\Models\DataSppd;
 use App\Models\Lampiran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +17,8 @@ class DashboardController extends Controller
         $user = Auth::user()->load([
             'dataDiri',
             'sppds' => function ($query) {
-                $query->latest('created_at')->limit(1);
-            }
+                $query->latest('data_sppd.created_at')->limit(1);
+            },
         ]);
 
         $sppd = $user->sppds->first();
@@ -64,16 +63,35 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $perjalanan = DataPerjalanan::with(['sppd.user.dataDiri'])
-            ->whereHas('sppd', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->findOrFail($id);
+        // CEK 1: Apakah Data Perjalanan ID tersebut benar-benar ada?
+        $cekPerjalanan = DataPerjalanan::find($id);
 
-        if ($perjalanan->sppd->user_id !== $user->id) {
-            abort(403, 'Unauthorized access');
+        if (! $cekPerjalanan) {
+            dd('DEBUG 1 GAGAL: Data Perjalanan dengan ID '.$id.' sama sekali TIDAK ADA di tabel data_perjalanan. Silakan buat data perjalanannya dulu di Filament.');
         }
 
+        // CEK 2: Apakah perjalanan ini punya sambungan ke SPPD?
+        $cekSppd = $cekPerjalanan->sppd;
+
+        if (! $cekSppd) {
+            dd('DEBUG 2 GAGAL: Perjalanan ID '.$id.' ADA, tapi kolom sppd_id-nya tidak terhubung ke tabel data_sppd manapun.');
+        }
+
+        // CEK 3: Intip isi tabel pivot, siapa saja pegawai di SPPD ini?
+        $usersDiSppd = $cekSppd->users->pluck('id')->toArray();
+
+        if (! in_array($user->id, $usersDiSppd)) {
+            dd([
+                'STATUS' => 'DEBUG 3 GAGAL: Anda terblokir sistem keamanan.',
+                'ALASAN' => 'ID Anda tidak terdaftar sebagai rombongan di SPPD ini.',
+                'ID AKUN ANDA SAAT INI' => $user->id,
+                'DAFTAR ID PEGAWAI DI SPPD INI' => empty($usersDiSppd) ? 'KOSONG (Belum ada pegawai yang dipilih)' : $usersDiSppd,
+                'SOLUSI' => 'Buka Filament Admin > Edit SPPD terkait > Masukkan nama Anda di form "Pegawai yang Ditugaskan" > Simpan.',
+            ]);
+        }
+
+        // --- Jika lolos 3 tahap di atas, jalankan kode asli ---
+        $perjalanan = DataPerjalanan::with(['sppd.users.dataDiri'])->findOrFail($id);
         $sppd = $perjalanan->sppd;
 
         return view('dashboard.view-history', compact('user', 'sppd', 'perjalanan'));

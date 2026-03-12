@@ -207,7 +207,7 @@ class DataPerjalananResource extends Resource
                     ->label('Nomor Surat Tugas')
                     ->searchable(),
 
-                TextColumn::make('sppd.user.name')
+                TextColumn::make('sppd.users.name')
                     ->label('Pegawai')
                     ->description(fn ($record): string => $record->sppd?->user?->dataDiri?->nip ?? '-'),
 
