@@ -6,4 +6,6 @@
       </h2>
     </div>
   </x-slot>
+
+  
 </x-app-layout>

@@ -24,13 +24,13 @@ class PaguSaldoOverview extends BaseWidget
 
         return [
             Stat::make('Saldo Pagu Umum', 'Rp '.number_format($saldoSisaUmum, 0, ',', '.'))
-                ->description('Total Pagu Awal: Rp '.number_format($paguAwalUmum, 0, ',', '.'))
+                ->description('Pagu Awal: Rp '.number_format($paguAwalUmum, 0, ',', '.'))
                 ->descriptionIcon('heroicon-m-wallet')
                 ->color('success')
                 ->chart([7, 2, 10, 3, 15, 4, 17]),
 
             Stat::make('Saldo Pagu PU', 'Rp '.number_format($saldoSisaPu, 0, ',', '.'))
-                ->description('Total Pagu Awal: Rp '.number_format($paguAwalPu, 0, ',', '.'))
+                ->description('Pagu Awal: Rp '.number_format($paguAwalPu, 0, ',', '.'))
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('info')
                 ->chart([3, 15, 4, 17, 7, 2, 10]),

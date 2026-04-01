@@ -14,4 +14,12 @@ class CreateSaldoPagu extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['pagu_awal_umum'] = $data['saldo_umum'];
+        $data['pagu_awal_pu'] = $data['saldo_pu'];
+
+        return $data;
+    }
 }

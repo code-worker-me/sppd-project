@@ -34,14 +34,14 @@ class SaldoPaguResource extends Resource
             ->schema([
                 Section::make('Input Pagu')
                     ->schema([
-                        TextInput::make('pagu_awal_umum')
+                        TextInput::make('saldo_umum')
                             ->label('Pagu Umum')
                             ->numeric()
                             ->prefix('Rp. ')
                             ->default(0)
                             ->required(),
 
-                        TextInput::make('pagu_awal_pu')
+                        TextInput::make('saldo_pu')
                             ->label('Pagu Pengembangan Usaha (PU)')
                             ->required()
                             ->numeric()
@@ -64,10 +64,10 @@ class SaldoPaguResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('saldo_umum')
-                    ->label('Pagu Umum')        
+                    ->label('Pagu Umum')
                     ->money('IDR'),
                 TextColumn::make('saldo_pu')
-                    ->label('Pagu Pengembangan Usaha (PU)')  
+                    ->label('Pagu Pengembangan Usaha (PU)')
                     ->money('IDR'),
                 TextColumn::make('tahun_anggaran')
                     ->label('Tahun Anggaran')
