@@ -29,5 +29,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(DataSppd::class, SppdPolicy::class);
         Gate::policy(DataPerjalanan::class, PerjalananPolicy::class);
         Gate::policy(DataDiri::class, PegawaiPolicy::class);
+
+        // Gate Manager
+        Gate::define('access-manager', function ($user) {
+            return $user->isAdmin() || $user->isStaff();
+        });
     }
 }

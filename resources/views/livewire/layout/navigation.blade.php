@@ -40,6 +40,14 @@ new class extends Component
                         {{ __('History') }}
                     </x-nav-link>
                 </div>
+
+                @can('access-manager')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('manager.index')" :active="request()->routeIs('manager.index')" wire:navigate>
+                        {{ __('Manager') }}
+                    </x-nav-link>
+                </div>
+                @endcan
             </div>
 
             <!-- Settings Dropdown -->
