@@ -16,25 +16,22 @@ class CreateDataPerjalanan extends CreateRecord
     protected ?string $heading = 'Halaman Menambah Data Perjalanan';
 
     protected function afterCreate(): void
-    {
-        $perjalanan = $this->record;
+{
+    $perjalanan = $this->record;
+    $sppd = $perjalanan->sppd;
+    $totalBiaya = $perjalanan->jumlah_sppd;
+    $pagu = Pagu::where('tahun_anggaran', date('Y'))->first();
 
-        $sppd = $perjalanan->sppd;
-
-        $totalBiaya = $perjalanan->jumlah_sppd;
-
-        $pagu = Pagu::where('tahun_anggaran', date('Y'))->first();
-
-        if ($pagu && $sppd) {
-            if ($sppd->jenis_st === 'umum') {
-                $pagu->saldo_umum -= $totalBiaya;
-            } elseif ($sppd->jenis_st === 'pu') {
-                $pagu->saldo_pu -= $totalBiaya;
-            }
-
-            $pagu->save();
+    if ($pagu && $sppd) {
+        if ($sppd->kategori === 'umum') {
+            $pagu->saldo_umum -= $totalBiaya;
+        } elseif ($sppd->kategori === 'pu') {
+            $pagu->saldo_pu -= $totalBiaya;
         }
+
+        $pagu->save();
     }
+}
 
     protected function getRedirectUrl(): string
     {

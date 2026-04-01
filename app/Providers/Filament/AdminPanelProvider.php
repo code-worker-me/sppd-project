@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->spa()
+            //->spa()
             ->login()
             ->databaseTransactions()
             ->profile(EditProfile::class)

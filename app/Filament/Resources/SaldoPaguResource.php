@@ -34,14 +34,14 @@ class SaldoPaguResource extends Resource
             ->schema([
                 Section::make('Input Pagu')
                     ->schema([
-                        TextInput::make('saldo_umum')
+                        TextInput::make('pagu_awal_umum')
                             ->label('Pagu Umum')
                             ->numeric()
                             ->prefix('Rp. ')
                             ->default(0)
                             ->required(),
 
-                        TextInput::make('saldo_pu')
+                        TextInput::make('pagu_awal_pu')
                             ->label('Pagu Pengembangan Usaha (PU)')
                             ->required()
                             ->numeric()

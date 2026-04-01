@@ -13,13 +13,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/status',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->validateCsrfTokens(except: [
+            'admin/login',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->renderable(function (AccessDeniedHttpException $e, Request $request) {
-            // Cek apakah user mencoba mengakses URL yang diawali dengan /admin
             if ($request->is('admin/*')) {
-                // Redirect ke URL frontend React JS Anda
                 return redirect('/');
             }
         });

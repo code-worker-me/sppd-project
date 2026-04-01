@@ -32,18 +32,32 @@ class SppdExport implements FromCollection, ShouldAutoSize, WithColumnWidths, Wi
 
     protected $counter = 0;
 
+    // public function __construct($year = null, $month = null)
+    // {
+    //     $this->year = $year;
+    //     $this->month = $month;
+
+    //     $pagu = Pagu::where('tahun_anggaran', $year ?? date('Y'))->first();
+
+    //     $this->saldoUmum = $pagu ? $pagu->saldo_umum : 0;
+    //     $this->saldoPu = $pagu ? $pagu->saldo_pu : 0;
+    //     $this->currentSaldoUmum = $this->saldoUmum;
+    //     $this->currentSaldoPu = $this->saldoPu;
+    // }
+
     public function __construct($year = null, $month = null)
-    {
-        $this->year = $year;
-        $this->month = $month;
+{
+    $this->year = $year;
+    $this->month = $month;
 
-        $pagu = Pagu::where('tahun_anggaran', $year ?? date('Y'))->first();
+    $pagu = Pagu::where('tahun_anggaran', $year ?? date('Y'))->first();
 
-        $this->saldoUmum = $pagu ? $pagu->saldo_umum : 0;
-        $this->saldoPu = $pagu ? $pagu->saldo_pu : 0;
-        $this->currentSaldoUmum = $this->saldoUmum;
-        $this->currentSaldoPu = $this->saldoPu;
-    }
+    // Ganti dari saldo_umum/saldo_pu ke pagu_awal_umum/pagu_awal_pu
+    $this->saldoUmum = $pagu ? $pagu->pagu_awal_umum : 0;
+    $this->saldoPu = $pagu ? $pagu->pagu_awal_pu : 0;
+    $this->currentSaldoUmum = $this->saldoUmum;
+    $this->currentSaldoPu = $this->saldoPu;
+}
 
     public function collection()
     {
@@ -120,7 +134,7 @@ class SppdExport implements FromCollection, ShouldAutoSize, WithColumnWidths, Wi
             $perjalanan->sppd->deskripsi ?? '-',
             $perjalanan->sppd->tg_berangkat?->format('Y-m-d') ?? '-',
             $perjalanan->sppd->tg_pulang?->format('Y-m-d') ?? '-',
-            ucfirst($perjalanan->tipe_perjalanan ?? 'Darat'),
+            ucfirst($perjalanan->sppd->angkutan ?? 'Darat'),
             $perjalanan->sppd->st ?? '-',
             $perjalanan->uang_harian ?? 0,
             $perjalanan->uang_representasi ?? 0,

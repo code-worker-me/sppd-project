@@ -50,14 +50,7 @@ class DataSppdResource extends Resource
             ->schema([
                 Section::make('SPPD Information')
                     ->schema([
-                        Select::make('jenis_st')
-                            ->label('Kategori Surat Tugas')
-                            ->options([
-                                'umum' => 'Umum',
-                                'pu'   => 'Pengembangan Usaha (PU)',
-                            ])
-                            ->required(),
-
+            
                         Select::make('users')
                             ->label('Pegawai yang Ditugaskan')
                             ->relationship(name: 'users', titleAttribute: 'name')

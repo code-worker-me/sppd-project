@@ -63,7 +63,7 @@ class PerjalananOverview extends BaseWidget
                     }),
 
                 TextColumn::make('jumlah_sppd')
-                    ->label('Total SPPD')
+                    ->label('Total Transaksi SPPD')
                     ->money('IDR')
                     ->color('success'),
             ])
