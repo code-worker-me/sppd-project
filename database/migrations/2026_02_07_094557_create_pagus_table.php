@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('tahun_anggaran');
             $table->decimal('saldo_umum', 15, 2)->default(0);
             $table->decimal('saldo_pu', 15, 2)->default(0);
-            $table->bigInteger('pagu_awal_umum')->default(0)->after('saldo_umum');
-            $table->bigInteger('pagu_awal_pu')->default(0)->after('saldo_pu');
+            $table->bigInteger('pagu_awal_umum')->default(0);
+            $table->bigInteger('pagu_awal_pu')->default(0);
             $table->timestamps();
         });
     }

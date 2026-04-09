@@ -9,7 +9,6 @@ class DataSppd extends Model
     protected $table = 'data_sppd';
 
     protected $fillable = [
-        'jenis_st',
         'st',
         'kategori',
         'kota',

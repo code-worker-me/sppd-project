@@ -17,4 +17,24 @@ class EditDataDiri extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    // Untuk menampilkan nama saat form edit dibuka
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['name'] = $this->record->user->name;
+        return $data;
+    }
+
+    // Untuk menyimpan nama saat save
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $this->record->user->update(['name' => $data['name']]);
+        unset($data['name']);
+        return $data;
+    }
 }

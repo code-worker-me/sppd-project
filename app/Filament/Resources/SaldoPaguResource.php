@@ -39,14 +39,30 @@ class SaldoPaguResource extends Resource
                             ->numeric()
                             ->prefix('Rp. ')
                             ->default(0)
-                            ->required(),
+                            ->required()
+                            ->hiddenOn('edit'),
 
                         TextInput::make('saldo_pu')
                             ->label('Pagu Pengembangan Usaha (PU)')
                             ->required()
                             ->numeric()
                             ->prefix('Rp. ')
-                            ->default(0),
+                            ->default(0)
+                            ->hiddenOn('edit'),
+
+                        TextInput::make('pagu_awal_umum')
+                            ->label('Revisi Pagu Awal Umum')
+                            ->numeric()
+                            ->prefix('Rp. ')
+                            ->default(0)
+                            ->visibleOn('edit'),
+
+                        TextInput::make('pagu_awal_pu')
+                            ->label('Revisi Pagu Awal PU')
+                            ->numeric()
+                            ->prefix('Rp. ')
+                            ->default(0)
+                            ->visibleOn('edit'),
 
                         TextInput::make('tahun_anggaran')
                             ->label('Tahun Anggaran')
@@ -63,14 +79,20 @@ class SaldoPaguResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('tahun_anggaran')
+                    ->label('Tahun Anggaran'),
+                TextColumn::make('pagu_awal_umum')
+                    ->label('Pagu Awal Umum')
+                    ->money('IDR'),
                 TextColumn::make('saldo_umum')
-                    ->label('Pagu Umum')
+                    ->label('Saldo Umum')
+                    ->money('IDR'),
+                TextColumn::make('pagu_awal_pu')
+                    ->label('Pagu Awal PU')
                     ->money('IDR'),
                 TextColumn::make('saldo_pu')
-                    ->label('Pagu Pengembangan Usaha (PU)')
+                    ->label('Saldo PU')
                     ->money('IDR'),
-                TextColumn::make('tahun_anggaran')
-                    ->label('Tahun Anggaran')
             ])
             ->filters([
                 //
@@ -87,9 +109,7 @@ class SaldoPaguResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

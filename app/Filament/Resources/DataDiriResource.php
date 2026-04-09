@@ -57,6 +57,7 @@ class DataDiriResource extends Resource
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->native(false)
+                            ->hiddenOn('edit')
                             ->createOptionForm([
                                 TextInput::make('name')
                                     ->label('Nama Lengkap')
@@ -99,6 +100,12 @@ class DataDiriResource extends Resource
                                 ->modalCancelActionLabel('Batal')
                             ),
 
+                        TextInput::make('name')
+                            ->label('Nama Pegawai')
+                            ->required()
+                            ->maxLength(255)
+                            ->visibleOn('edit'),
+
                         TextInput::make('nip')
                             ->label('NIP')
                             ->placeholder('198001012003001001')
@@ -110,7 +117,7 @@ class DataDiriResource extends Resource
                         Select::make('unit_kerja')
                             ->label('Unit Kerja')
                             ->options([
-                                'kepala stasiun' =>'Kepala Stasiun',
+                                'kepala stasiun' => 'Kepala Stasiun',
                                 'sekretariat / tata usaha' => 'Sekretariat/Tata Usaha',
                                 'program' => 'Program',
                                 'berita' => 'Berita',
@@ -119,13 +126,14 @@ class DataDiriResource extends Resource
                                 'konten Media Baru' => 'Konten Media Baru',
                                 'keuangan' => 'Keuangan',
                                 'umum' => 'Umum',
+                                'driver' =>'Driver',
                             ])
                             ->default('staff')
                             ->required(),
 
                         TextInput::make('pangkat')
                             ->label('Pangkal/Gol')
-                            ->maxLength(255)
+                            ->maxLength(255),
                     ])
                     ->columns(2)
             ]);
@@ -206,9 +214,7 @@ class DataDiriResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -224,5 +230,10 @@ class DataDiriResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'custom-info';
     }
 }

@@ -20,6 +20,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Support\Facades\FilamentView;
+use Illuminate\Support\Facades\Blade;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -34,11 +36,6 @@ class AdminPanelProvider extends PanelProvider
             ->databaseTransactions()
             ->profile(EditProfile::class)
             ->brandName('Sistem SPPD')
-            ->colors([
-                'primary' => Color::Amber,
-
-
-            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -58,6 +55,15 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->colors([
+                'primary' => '#003399',
+                'danger' => Color::Rose,
+                'gray' => Color::Slate, // <--- Ini akan mengubah warna dasar dari hitam ke abu-abu biru elegan
+                'info' => Color::Blue,
+                'success' => '#48A111',
+                'warning' => Color::Amber,
+                'custom-info' => '#03AED2'
             ]);
     }
 }

@@ -1,0 +1,44 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+@config 'tailwind.config.js';
+
+/* 1. Navbar / Topbar */
+.fi-topbar {
+    background-color: #003399 !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
+}
+.fi-topbar * {
+    color: white !important;
+}
+
+/* 2. SIDEBAR - Mengubah seluruh area sidebar */
+/* Gunakan .fi-sidebar-ctn untuk memastikan semua bagian sidebar terkena warna */
+.fi-sidebar, 
+.fi-sidebar-nav,
+.fi-sidebar-header,
+aside {
+    background-color: #0AC4E0 !important;
+}
+
+/* 3. Sidebar Item (Navigasi) */
+.fi-sidebar-item-button {
+    margin-bottom: 4px;
+}
+
+/* Menu Aktif */
+.fi-sidebar-item-active .fi-sidebar-item-button {
+    background-color: #003399 !important;
+    color: white !important;
+    border-radius: 8px !important;
+}
+
+/* Menu Hover */
+.fi-sidebar-item-button:hover {
+    background-color: rgba(0, 51, 153, 0.1) !important;
+}
+
+/* 4. Badge di samping menu */
+.fi-badge {
+    background-color: white !important; /* Agar kontras di atas background biru */
+    color: #003399 !important;
+    border-radius: 6px !important;
+}

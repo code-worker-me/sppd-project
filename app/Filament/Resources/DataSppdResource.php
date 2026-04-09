@@ -108,7 +108,7 @@ class DataSppdResource extends Resource
                             ->label('Tanggal Pulang')
                             ->native(false)
                             ->displayFormat('d-m-Y')
-                            ->after('tg_berangkat')
+                            ->afterOrEqual('tg_berangkat')
                             ->placeholder('27-01-2026')
                             ->required(),
                     ])->columns(2),
@@ -432,5 +432,10 @@ class DataSppdResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'custom-info';
     }
 }

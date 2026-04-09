@@ -19,7 +19,6 @@ return new class extends Migration
             $table->text('angkutan')->nullable();
             $table->date('tg_berangkat')->nullable();
             $table->date('tg_pulang')->nullable();
-            $table->enum('jenis_st', ['umum', 'pu'])->default('umum');
             $table->timestamps();
         });
     }
