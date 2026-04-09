@@ -35,12 +35,8 @@ class AdminPanelProvider extends PanelProvider
             ->profile(EditProfile::class)
             ->brandName('Sistem SPPD')
             ->colors([
-                'primary' => '#003399', // Biru TVRI yang khas
-                'danger' => Color::Red,
-                'gray' => Color::Zinc,
-                'info' => Color::Cyan,
-                'success' => Color::Green,
-                'warning' => Color::Yellow,
+                'primary' => Color::Amber,
+
 
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

@@ -55,7 +55,7 @@ class DataDiriResource extends Resource
                             ->searchable()
                             ->preload()
                             ->required()
-                            ->unique()
+                            ->unique(ignoreRecord: true)
                             ->native(false)
                             ->createOptionForm([
                                 TextInput::make('name')
@@ -110,6 +110,7 @@ class DataDiriResource extends Resource
                         Select::make('unit_kerja')
                             ->label('Unit Kerja')
                             ->options([
+                                'kepala stasiun' =>'Kepala Stasiun',
                                 'sekretariat / tata usaha' => 'Sekretariat/Tata Usaha',
                                 'program' => 'Program',
                                 'berita' => 'Berita',
