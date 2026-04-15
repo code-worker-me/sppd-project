@@ -61,7 +61,6 @@ new #[Layout('layouts.guest')] class extends Component {
                 {{ __('Belum punya akun?') }}
             </a>
             <x-primary-button class="ms-3" wire:loading.attr="disabled">
-                <x-pixelicon-spinner wire:loading wire:target="login" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"/>
                 <span wire:loading wire:target="login">{{ __('Masuk...') }}</span>
                 <span wire:loading.remove wire:target="login">{{ __('Masuk') }}</span>
             </x-primary-button>
